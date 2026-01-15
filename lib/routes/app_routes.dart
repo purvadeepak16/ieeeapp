@@ -11,6 +11,8 @@ import 'package:ieee_app/screens/profile/profile_screen.dart';
 import 'package:ieee_app/screens/about/about_screen.dart';
 import 'package:ieee_app/screens/login_screen.dart';
 import 'package:ieee_app/screens/register_screen.dart';
+import 'package:ieee_app/screens/home/micro_skill_detail_screen.dart';
+import 'package:ieee_app/models/micro_skill_model.dart';
 
 final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -62,6 +64,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             pageBuilder: (context, state) => const NoTransitionPage(
               child: AboutScreen(),
             ),
+          ),
+          GoRoute(
+            path: '/micro-skill/:id',
+            builder: (context, state) {
+              // You'll need to pass the MicroSkill object via extra
+              final microSkill = state.extra as MicroSkill;
+              return MicroSkillDetailScreen(microSkill: microSkill);
+            },
           ),
         ],
       ),
