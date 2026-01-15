@@ -1,156 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ieee_app/models/event_model.dart';
-import 'package:ieee_app/widgets/announcements_section.dart';
-import 'package:ieee_app/widgets/banner_carousel.dart';
-import 'package:ieee_app/widgets/featured_events.dart';
-import 'package:ieee_app/widgets/micro_skills_widget.dart';
-import 'package:ieee_app/widgets/quick_navigation.dart';
 import 'package:ieee_app/screens/events/providers/events_provider.dart';
+import 'package:ieee_app/screens/home/registration_webview_screen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class FeaturedEvents extends ConsumerWidget {
+  const FeaturedEvents({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final ScrollController _scrollController = ScrollController();
-  bool _showAppBarTitle = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.offset > 100 && !_showAppBarTitle) {
-        setState(() => _showAppBarTitle = true);
-      } else if (_scrollController.offset <= 100 && _showAppBarTitle) {
-        setState(() => _showAppBarTitle = false);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _showAppBarTitle ? 'Home' : 'Home',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        // Removed search and notifications buttons
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.delayed(const Duration(seconds: 1));
-          return;
-        },
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          physics: const ClampingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Welcome Section
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome Back,',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withAlpha(178),
-                          ),
-                    ),
-                    Text(
-                      'IEEE Member!',
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Banner Carousel - Fixed with images
-              const BannerCarousel(),
-              const SizedBox(height: 16),
-
-              // Micro-Skills Widget
-              MicroSkillsWidget(),
-
-              // Announcements
-              const AnnouncementsSection(),
-
-              // Quick Navigation
-              QuickNavigation(),
-              const SizedBox(height: 16),
-
-              // Featured Events
-              const FeaturedEvents(),
-              const SizedBox(height: 24),
-
-              // Upcoming Events Section
-              _UpcomingEventsSection(),
-
-              // Footer
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withAlpha(25),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline,
-                        color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'IEEE VESIT - Empowering technology for humanity',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _UpcomingEventsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final events = ref.watch(eventsProvider);
-    final upcomingEvents = events
-        .where((event) => event.date
-            .isAfter(DateTime.now().subtract(const Duration(days: 1))))
-        .take(2)
-        .toList();
+    final featuredEvents = events.where((event) => event.isFeatured).take(3).toList();
 
-    if (upcomingEvents.isEmpty) return const SizedBox();
+    if (featuredEvents.isEmpty) {
+      return const SizedBox();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -161,63 +26,201 @@ class _UpcomingEventsSection extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Upcoming Events',
+                'Featured Events',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               TextButton(
                 onPressed: () {
                   // Navigate to events page
                   Navigator.pushNamed(context, '/events');
                 },
-                child: const Text('View Calendar'),
+                child: const Text('View All'),
               ),
             ],
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: upcomingEvents.map((event) {
-              return Card(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: _getEventColor(event.type).withAlpha(51),
-                    child: Icon(
-                      _getEventIcon(event.type),
-                      color: _getEventColor(event.type),
-                    ),
-                  ),
-                  title: Text(event.title),
-                  subtitle: Text('${_formatDate(event.date)} • ${event.venue}'),
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      // Show event card details
-                      _showEventCard(context, event);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+        SizedBox(
+          height: 220, // Reduced from 240
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: featuredEvents.length,
+            itemBuilder: (context, index) {
+              final event = featuredEvents[index];
+              return GestureDetector(
+                onTap: () {
+                  // Show event card details
+                  _showEventCard(context, event);
+                },
+                child: Container(
+                  width: 280,
+                  margin: const EdgeInsets.only(right: 16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Theme.of(context).colorScheme.surface,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withAlpha(51),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
                       ),
-                    ),
-                    child: const Text(
-                      'Details',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
+                    ],
                   ),
-                  onTap: () {
-                    // Show event card details
-                    _showEventCard(context, event);
-                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Event Header
+                      Container(
+                        height: 120, // Reduced from 130
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(15),
+                          ),
+                          color: _getEventColor(event.type),
+                        ),
+                        child: Stack(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                borderRadius: const BorderRadius.vertical(
+                                  top: Radius.circular(15),
+                                ),
+                                gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  colors: [
+                                    Colors.black.withAlpha(153),
+                                    Colors.transparent,
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(12),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    event.title,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Row(
+                                    children: [
+                                      const Icon(Icons.location_on, size: 14, color: Colors.white),
+                                      const SizedBox(width: 4),
+                                      Expanded(
+                                        child: Text(
+                                          event.venue,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      // Event Details - FIXED: SingleChildScrollView inside Expanded
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        event.formattedDate,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Row(
+                                  children: [
+                                    const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                                    const SizedBox(width: 4),
+                                    Expanded(
+                                      child: Text(
+                                        event.formattedTime,
+                                        style: const TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey,
+                                        ),
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  event.description,
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: Colors.grey,
+                                  ),
+                                  maxLines: 2, // Keep as 2
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                const SizedBox(height: 12),
+                                SizedBox(
+                                  width: double.infinity,
+                                  child: ElevatedButton(
+                                    onPressed: () => _openRegistrationLink(event.registrationLink, context),
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Theme.of(context).colorScheme.primary,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                    ),
+                                    child: const Text(
+                                      'Register Now',
+                                      style: TextStyle(color: Colors.white, fontSize: 12),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
-            }).toList(),
+            },
           ),
         ),
-        const SizedBox(height: 20),
       ],
     );
   }
@@ -239,25 +242,16 @@ class _UpcomingEventsSection extends ConsumerWidget {
     }
   }
 
-  IconData _getEventIcon(EventType type) {
-    switch (type) {
-      case EventType.workshop:
-        return Icons.workspaces;
-      case EventType.competition:
-        return Icons.emoji_events;
-      case EventType.conference:
-        return Icons.groups;
-      case EventType.meeting:
-        return Icons.meeting_room;
-      case EventType.deadline:
-        return Icons.alarm;
-      default:
-        return Icons.event;
-    }
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+  void _openRegistrationLink(String url, BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => RegistrationWebViewScreen(
+          url: url,
+          title: 'Event Registration',
+        ),
+      ),
+    );
   }
 
   void _showEventCard(BuildContext context, IEEEEvent event) {
@@ -272,7 +266,7 @@ class _UpcomingEventsSection extends ConsumerWidget {
   }
 }
 
-// Event Details Sheet (Simplified version)
+// Simplified EventDetailsSheet for home screen
 class EventDetailsSheet extends StatelessWidget {
   final IEEEEvent event;
 
@@ -312,8 +306,7 @@ class EventDetailsSheet extends StatelessWidget {
 
                 // Event Type
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: event.typeColor.withAlpha(51),
                     borderRadius: BorderRadius.circular(20),
@@ -503,7 +496,7 @@ class EventDetailsSheet extends StatelessWidget {
   }
 }
 
-// Registration WebView
+// Registration WebView for home screen
 class RegistrationWebView extends StatefulWidget {
   final String url;
 
@@ -521,7 +514,7 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
   @override
   void initState() {
     super.initState();
-
+    
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.white)
@@ -587,6 +580,7 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
               ],
             ),
           ),
+
           if (isLoading)
             LinearProgressIndicator(
               value: progress / 100,
@@ -594,6 +588,7 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
               color: Theme.of(context).colorScheme.primary,
               minHeight: 2,
             ),
+
           Expanded(
             child: WebViewWidget(controller: controller),
           ),

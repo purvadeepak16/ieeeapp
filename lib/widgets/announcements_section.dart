@@ -1,224 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ieee_app/models/event_model.dart';
-import 'package:ieee_app/widgets/announcements_section.dart';
-import 'package:ieee_app/widgets/banner_carousel.dart';
-import 'package:ieee_app/widgets/featured_events.dart';
-import 'package:ieee_app/widgets/micro_skills_widget.dart';
-import 'package:ieee_app/widgets/quick_navigation.dart';
 import 'package:ieee_app/screens/events/providers/events_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+class AnnouncementsSection extends ConsumerWidget {
+  const AnnouncementsSection({super.key});
 
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  final ScrollController _scrollController = ScrollController();
-  bool _showAppBarTitle = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.offset > 100 && !_showAppBarTitle) {
-        setState(() => _showAppBarTitle = true);
-      } else if (_scrollController.offset <= 100 && _showAppBarTitle) {
-        setState(() => _showAppBarTitle = false);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _showAppBarTitle ? 'Home' : 'Home',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        // Removed search and notifications buttons
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await Future.delayed(const Duration(seconds: 1));
-          return;
-        },
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          physics: const ClampingScrollPhysics(),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Welcome Section
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Welcome Back,',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withAlpha(178),
-                          ),
-                    ),
-                    Text(
-                      'IEEE Member!',
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Banner Carousel - Fixed with images
-              const BannerCarousel(),
-              const SizedBox(height: 16),
-
-              // Micro-Skills Widget
-              MicroSkillsWidget(),
-
-              // Announcements
-              const AnnouncementsSection(),
-
-              // Quick Navigation
-              QuickNavigation(),
-              const SizedBox(height: 16),
-
-              // Featured Events
-              const FeaturedEvents(),
-              const SizedBox(height: 24),
-
-              // Upcoming Events Section
-              _UpcomingEventsSection(),
-
-              // Footer
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withAlpha(25),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline,
-                        color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'IEEE VESIT - Empowering technology for humanity',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _UpcomingEventsSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final events = ref.watch(eventsProvider);
-    final upcomingEvents = events
-        .where((event) => event.date
-            .isAfter(DateTime.now().subtract(const Duration(days: 1))))
-        .take(2)
-        .toList();
+    final upcomingEvents = events.take(3).toList(); // Show first 3 events as announcements
 
-    if (upcomingEvents.isEmpty) return const SizedBox();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Upcoming Events',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // Navigate to events page
-                  Navigator.pushNamed(context, '/events');
-                },
-                child: const Text('View Calendar'),
-              ),
-            ],
-          ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: upcomingEvents.map((event) {
-              return Card(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: _getEventColor(event.type).withAlpha(51),
-                    child: Icon(
-                      _getEventIcon(event.type),
-                      color: _getEventColor(event.type),
-                    ),
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      elevation: 2,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Announcements',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
                   ),
-                  title: Text(event.title),
-                  subtitle: Text('${_formatDate(event.date)} • ${event.venue}'),
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      // Show event card details
-                      _showEventCard(context, event);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'Details',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                  onTap: () {
-                    // Show event card details
-                    _showEventCard(context, event);
-                  },
                 ),
+                TextButton(
+                  onPressed: () {
+                    // Navigate to events page
+                    Navigator.pushNamed(context, '/events');
+                  },
+                  child: const Text('View All'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            ...upcomingEvents.map((event) {
+              return ListTile(
+                contentPadding: const EdgeInsets.symmetric(vertical: 4),
+                leading: CircleAvatar(
+                  backgroundColor: _getEventColor(event.type).withAlpha(51),
+                  child: Icon(
+                    _getEventIcon(event.type),
+                    color: _getEventColor(event.type),
+                  ),
+                ),
+                title: Text(
+                  event.title,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                subtitle: Text(
+                  event.description.length > 80 
+                      ? '${event.description.substring(0, 80)}...' 
+                      : event.description,
+                  style: const TextStyle(fontSize: 12),
+                ),
+                trailing: Text(
+                  '${event.date.day}/${event.date.month}',
+                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                onTap: () {
+                  // Show event card details
+                  _showEventCard(context, event);
+                },
               );
-            }).toList(),
-          ),
+            }),
+          ],
         ),
-        const SizedBox(height: 20),
-      ],
+      ),
     );
   }
 
@@ -256,10 +111,6 @@ class _UpcomingEventsSection extends ConsumerWidget {
     }
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
-  }
-
   void _showEventCard(BuildContext context, IEEEEvent event) {
     showModalBottomSheet(
       context: context,
@@ -272,7 +123,7 @@ class _UpcomingEventsSection extends ConsumerWidget {
   }
 }
 
-// Event Details Sheet (Simplified version)
+// Simplified EventDetailsSheet for announcements
 class EventDetailsSheet extends StatelessWidget {
   final IEEEEvent event;
 
@@ -312,8 +163,7 @@ class EventDetailsSheet extends StatelessWidget {
 
                 // Event Type
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: event.typeColor.withAlpha(51),
                     borderRadius: BorderRadius.circular(20),
@@ -503,7 +353,7 @@ class EventDetailsSheet extends StatelessWidget {
   }
 }
 
-// Registration WebView
+// Registration WebView for announcements
 class RegistrationWebView extends StatefulWidget {
   final String url;
 
@@ -521,7 +371,7 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
   @override
   void initState() {
     super.initState();
-
+    
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.white)
@@ -587,6 +437,7 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
               ],
             ),
           ),
+
           if (isLoading)
             LinearProgressIndicator(
               value: progress / 100,
@@ -594,6 +445,7 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
               color: Theme.of(context).colorScheme.primary,
               minHeight: 2,
             ),
+
           Expanded(
             child: WebViewWidget(controller: controller),
           ),
