@@ -31,6 +31,7 @@ class AppScaffold extends StatelessWidget {
       drawer: const AppDrawer(),
       body: child,
       bottomNavigationBar: BottomNavBar(location: location),
+
     );
   }
 }
