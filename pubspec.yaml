@@ -34,3 +34,5 @@ flutter:
   assets:
     - assets/banners/
     - assets/events/
+    - assets/images/
+    - assets/images/logos/
