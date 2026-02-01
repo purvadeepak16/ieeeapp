@@ -20,7 +20,7 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: AppConstants.homePath,
+    initialLocation: AppConstants.loginPath,
     debugLogDiagnostics: true,
     routes: [
       ShellRoute(
