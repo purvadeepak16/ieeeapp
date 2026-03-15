@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ieee_app/core/constants/app_constants.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -31,7 +32,7 @@ class LoginScreen extends StatelessWidget {
                     padding: EdgeInsets.zero,
                     icon: const Icon(Icons.arrow_back,
                         color: Colors.white, size: 20),
-                    onPressed: () => context.go('/register'),
+                    onPressed: () => context.go(AppConstants.onboardingPath),
                   ),
                 ),
               ),

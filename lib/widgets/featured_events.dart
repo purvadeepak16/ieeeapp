@@ -4,6 +4,7 @@ import 'package:ieee_app/models/event_model.dart';
 import 'package:ieee_app/screens/events/providers/events_provider.dart';
 import 'package:ieee_app/screens/home/registration_webview_screen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:ieee_app/widgets/common/neo_card.dart';
 
 class FeaturedEvents extends ConsumerWidget {
   const FeaturedEvents({super.key});
@@ -42,154 +43,98 @@ class FeaturedEvents extends ConsumerWidget {
           ),
         ),
         SizedBox(
-          height: 220, // Reduced from 240
+          height: 240, // Increased to account for NeoCard shadow and prevent vertical overflow
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             itemCount: featuredEvents.length,
             itemBuilder: (context, index) {
               final event = featuredEvents[index];
-              return GestureDetector(
-                onTap: () {
-                  // Show event card details
-                  _showEventCard(context, event);
-                },
-                child: Container(
-                  width: 280,
-                  margin: const EdgeInsets.only(right: 16),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: Theme.of(context).colorScheme.surface,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withAlpha(51),
-                        blurRadius: 8,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Event Header
-                      Container(
-                        height: 120, // Reduced from 130
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.vertical(
-                            top: Radius.circular(15),
-                          ),
-                          color: _getEventColor(event.type),
-                        ),
-                        child: Stack(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: const BorderRadius.vertical(
-                                  top: Radius.circular(15),
-                                ),
-                                gradient: LinearGradient(
-                                  begin: Alignment.bottomCenter,
-                                  end: Alignment.topCenter,
-                                  colors: [
-                                    Colors.black.withAlpha(153),
-                                    Colors.transparent,
-                                  ],
-                                ),
+              return Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: GestureDetector(
+                  onTap: () {
+                    // Show event card details
+                    _showEventCard(context, event);
+                  },
+                  child: NeoCard(
+                    backgroundColor: Theme.of(context).colorScheme.surface,
+                    padding: EdgeInsets.zero,
+                    child: Container(
+                      width: 280,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Event Header
+                          Container(
+                            height: 110,
+                            decoration: BoxDecoration(
+                              color: _getEventColor(event.type),
+                              border: const Border(
+                                bottom: BorderSide(color: Colors.black, width: 2),
                               ),
                             ),
-                            Padding(
-                              padding: const EdgeInsets.all(12),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    event.title,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
+                            child: Stack(
+                              children: [
+                                Container(
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Colors.black.withAlpha(153),
+                                        Colors.transparent,
+                                      ],
                                     ),
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
                                   ),
-                                  const SizedBox(height: 4),
-                                  Row(
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      const Icon(Icons.location_on, size: 14, color: Colors.white),
-                                      const SizedBox(width: 4),
-                                      Expanded(
-                                        child: Text(
-                                          event.venue,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
-                                          ),
-                                          maxLines: 1,
-                                          overflow: TextOverflow.ellipsis,
+                                      Text(
+                                        event.title,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w900,
+                                          letterSpacing: -0.5,
                                         ),
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                      
-                      // Event Details - FIXED: SingleChildScrollView inside Expanded
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Padding(
+                          ),
+                          
+                          // Event Details
+                          Padding(
                             padding: const EdgeInsets.all(12),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Row(
                                   children: [
-                                    const Icon(Icons.calendar_today, size: 14, color: Colors.grey),
+                                    const Icon(Icons.calendar_today, size: 12, color: Colors.black54),
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
                                         event.formattedDate,
                                         style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
+                                          fontSize: 11,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.black54,
                                         ),
                                         maxLines: 1,
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                     ),
                                   ],
-                                ),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    const Icon(Icons.access_time, size: 14, color: Colors.grey),
-                                    const SizedBox(width: 4),
-                                    Expanded(
-                                      child: Text(
-                                        event.formattedTime,
-                                        style: const TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey,
-                                        ),
-                                        maxLines: 1,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  event.description,
-                                  style: const TextStyle(
-                                    fontSize: 11,
-                                    color: Colors.grey,
-                                  ),
-                                  maxLines: 2, // Keep as 2
-                                  overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 12),
                                 SizedBox(
@@ -197,24 +142,26 @@ class FeaturedEvents extends ConsumerWidget {
                                   child: ElevatedButton(
                                     onPressed: () => _openRegistrationLink(event.registrationLink, context),
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: Theme.of(context).colorScheme.primary,
+                                      backgroundColor: Colors.black,
+                                      foregroundColor: Colors.white,
                                       shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(10),
+                                        borderRadius: BorderRadius.circular(4),
                                       ),
+                                      elevation: 0,
                                       padding: const EdgeInsets.symmetric(vertical: 8),
                                     ),
                                     child: const Text(
-                                      'Register Now',
-                                      style: TextStyle(color: Colors.white, fontSize: 12),
+                                      'REGISTER NOW',
+                                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 0.5),
                                     ),
                                   ),
                                 ),
                               ],
                             ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ieee_app/widgets/common/neo_card.dart';
 
 class MagazineScreen extends StatelessWidget {
   const MagazineScreen({super.key});
@@ -8,109 +9,114 @@ class MagazineScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
 
     return SafeArea(
       child: Scaffold(
-        backgroundColor: theme.scaffoldBackgroundColor,
+        backgroundColor: const Color(0xFFF5F5F7),
         body: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 32),
 
               Text(
-                'IEEE Publications',
+                'IEEE PUBLICATIONS',
                 style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                  letterSpacing: 1.0,
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 24),
 
-              Row(
-                children: const [
+              const Row(
+                children: [
                   Expanded(
                     child: _CategoryButton(
-                      icon: Icons.menu_book,
-                      label: 'Magazines',
+                      icon: Icons.menu_book_rounded,
+                      label: 'MAGAZINES',
                       isActive: true,
                     ),
                   ),
                   SizedBox(width: 12),
                   Expanded(
                     child: _CategoryButton(
-                      icon: Icons.description,
-                      label: 'Papers',
+                      icon: Icons.description_rounded,
+                      label: 'PAPERS',
                       isActive: false,
                     ),
                   ),
                   SizedBox(width: 12),
                   Expanded(
                     child: _CategoryButton(
-                      icon: Icons.star,
-                      label: 'Starred',
+                      icon: Icons.star_rounded,
+                      label: 'STARRED',
                       isActive: false,
                     ),
                   ),
                 ],
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 40),
 
               Text(
-                'Student Reviews',
+                'STUDENT REVIEWS',
                 style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                  letterSpacing: 0.5,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
 
               SizedBox(
-                height: 180,
+                height: 170,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   separatorBuilder: (_, __) => const SizedBox(width: 16),
                   itemCount: 3,
                   itemBuilder: (context, index) {
                     return _ReviewCard(
-                      name: 'Reviewer ${index + 1}',
+                      name: 'REVIEWER ${index + 1}',
                       review: index == 0
-                          ? 'Great paper, very insightful'
+                          ? 'Great paper, very insightful and well-researched.'
                           : index == 1
-                          ? 'Thorough analysis, must-read'
-                          : 'Well structured and helpful',
+                          ? 'Thorough analysis, must-read for tech enthusiasts.'
+                          : 'Well structured and extremely helpful guide.',
                       rating: 5 - index,
                     );
                   },
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 40),
 
               Text(
-                'Downloadable Papers',
+                'DOWNLOADABLE PAPERS',
                 style: theme.textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w900,
+                  color: Colors.black,
+                  letterSpacing: 0.5,
                 ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
 
               const _PaperTile(
-                title: 'Paper 1',
-                subtitle: 'Tech Conference 2020',
+                title: 'PAPER 1',
+                subtitle: 'TECH CONFERENCE 2020',
               ),
               const _PaperTile(
-                title: 'Paper 2',
-                subtitle: 'Journal of Engineering',
+                title: 'PAPER 2',
+                subtitle: 'JOURNAL OF ENGINEERING',
               ),
               const _PaperTile(
-                title: 'Paper 3',
-                subtitle: 'IEEE Research',
+                title: 'PAPER 3',
+                subtitle: 'IEEE RESEARCH',
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 48),
             ],
           ),
         ),
@@ -136,41 +142,37 @@ class _CategoryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 250),
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      decoration: BoxDecoration(
-        color: isActive
-            ? accentBlue.withOpacity(0.12)
-            : theme.cardColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(
-          color: isActive ? accentBlue : theme.dividerColor,
-          width: 1.2,
+    return SizedBox(
+      height: 90, // Constrain height to prevent shadow layer from breaking
+      child: NeoCard(
+        backgroundColor: isActive ? accentBlue.withOpacity(0.12) : Colors.white,
+        padding: EdgeInsets.zero, // Remove NeoCard padding since we center the content
+        borderRadius: 12,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min, // Keep column tight
+            children: [
+              Icon(
+                icon,
+                size: 24, // Slightly larger icon
+                color: isActive ? accentBlue : Colors.black54,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                label,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 10,
+                  letterSpacing: 0.5,
+                  color: Colors.black,
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis, // Ensure long labels don't break layout
+              ),
+            ],
+          ),
         ),
-      ),
-      child: Column(
-        children: [
-          Icon(
-            icon,
-            size: 22,
-            color: isActive
-                ? accentBlue
-                : theme.colorScheme.onBackground.withOpacity(0.6),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: theme.textTheme.labelMedium?.copyWith(
-              fontWeight: FontWeight.w600,
-              color: isActive
-                  ? accentBlue
-                  : theme.colorScheme.onBackground,
-            ),
-          ),
-        ],
       ),
     );
   }
@@ -191,65 +193,65 @@ class _ReviewCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
     return Container(
       width: 260,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: isDark
-            ? const LinearGradient(
-          colors: [
-            Color(0xFF1A1F26),
-            Color(0xFF14181E),
-          ],
-        )
-            : null,
-        color: isDark ? null : theme.cardColor,
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: theme.dividerColor),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const CircleAvatar(
-                radius: 16,
-                backgroundColor: Color(0xFF2A2F36),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Text(
-                  name,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
+      margin: const EdgeInsets.only(bottom: 8, right: 8), // Small margin for the shadow offset in NeoCard
+      child: NeoCard(
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.black, width: 1.5),
+                  ),
+                  child: const CircleAvatar(
+                    radius: 14,
+                    backgroundColor: Color(0xFFF0F0F0),
+                    child: Icon(Icons.person, size: 16, color: Colors.black54),
                   ),
                 ),
-              ),
-              Row(
-                children: List.generate(
-                  5,
-                      (i) => Icon(
-                    Icons.star,
-                    size: 14,
-                    color: i < rating
-                        ? Colors.amber
-                        : theme.dividerColor,
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 14,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Text(
-            review,
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.textTheme.bodySmall?.color,
+                Row(
+                  children: List.generate(
+                    5,
+                    (i) => Icon(
+                      Icons.star_rounded,
+                      size: 16,
+                      color: i < rating ? Colors.amber : Colors.black12,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+            const SizedBox(height: 14),
+            Text(
+              review,
+              maxLines: 4,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                color: Colors.black87,
+                fontSize: 12,
+                height: 1.5,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -270,40 +272,50 @@ class _PaperTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: theme.cardColor,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: theme.dividerColor),
-      ),
-      child: Row(
-        children: [
-          Icon(Icons.picture_as_pdf, color: accentBlue),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: theme.textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  subtitle,
-                  style: theme.textTheme.bodySmall,
-                ),
-              ],
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: NeoCard(
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: accentBlue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: accentBlue, width: 1.5),
+              ),
+              child: const Icon(Icons.picture_as_pdf_rounded, color: accentBlue),
             ),
-          ),
-          Icon(Icons.download_rounded,
-              color: theme.textTheme.bodySmall?.color),
-        ],
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w900,
+                      fontSize: 15,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.download_for_offline_rounded, color: Colors.black54),
+          ],
+        ),
       ),
     );
   }

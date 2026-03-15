@@ -8,41 +8,64 @@ class AppTypography {
   static const String fontFamily = 'Inter';
 
   static TextTheme get lightTextTheme => GoogleFonts.interTextTheme().copyWith(
-        displaySmall: const TextStyle(
+        displaySmall: TextStyle(
           fontSize: 32,
-          fontWeight: FontWeight.w600,
-          height: 1.2,
-          color: AppColors.textDark,
+          fontWeight: FontWeight.w900,
+          height: 1.1,
+          letterSpacing: -1.5,
+          color: AppColors.premiumNavy,
         ),
-        headlineSmall: const TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textDark,
+        headlineLarge: TextStyle(
+          fontSize: 32,
+          fontWeight: FontWeight.w900,
+          letterSpacing: -1.2,
+          color: AppColors.premiumNavy,
         ),
-        titleLarge: const TextStyle(
+        headlineMedium: TextStyle(
+          fontSize: 26,
+          fontWeight: FontWeight.w900,
+          letterSpacing: -0.8,
+          color: AppColors.premiumNavy,
+        ),
+        headlineSmall: TextStyle(
+          fontSize: 22,
+          fontWeight: FontWeight.w900,
+          letterSpacing: -0.5,
+          color: AppColors.premiumNavy,
+        ),
+        titleLarge: TextStyle(
           fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: AppColors.textDark,
+          fontWeight: FontWeight.w900,
+          letterSpacing: -0.2,
+          color: AppColors.premiumNavy,
         ),
-        bodyLarge: const TextStyle(
+        titleMedium: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.w800,
+          color: AppColors.premiumNavy,
+        ),
+        bodyLarge: TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w500,
-          color: AppColors.textDark,
+          color: AppColors.premiumNavy.withOpacity(0.9),
+          height: 1.6,
         ),
-        bodyMedium: const TextStyle(
+        bodyMedium: TextStyle(
           fontSize: 14,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textMedium,
+          fontWeight: FontWeight.w500,
+          color: AppColors.premiumNavy.withOpacity(0.8),
+          height: 1.5,
         ),
-        bodySmall: const TextStyle(
+        bodySmall: TextStyle(
           fontSize: 12,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textLight,
+          fontWeight: FontWeight.w600,
+          color: AppColors.premiumNavy.withOpacity(0.6),
         ),
-        labelSmall: const TextStyle(
+        labelSmall: TextStyle(
           fontSize: 11,
-          fontWeight: FontWeight.w400,
-          color: AppColors.textLight,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 1.2,
+          color: AppColors.premiumNavy.withOpacity(0.7),
         ),
       );
 
@@ -85,3 +108,4 @@ class AppTypography {
         ),
       );
 }
+

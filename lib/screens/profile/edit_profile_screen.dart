@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../models/user_model.dart';
-import '../../../core/theme/app_colors.dart';
+import 'package:ieee_app/models/user_model.dart';
+import 'package:ieee_app/core/theme/app_colors.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
@@ -43,7 +43,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Edit profile")),
+      appBar: AppBar(title: const Text('Edit profile')),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -95,15 +95,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
               const SizedBox(height: 24),
             TextField(
               controller: nameController,
-              decoration: const InputDecoration(labelText: "Full name"),
+              decoration: const InputDecoration(labelText: 'Full name'),
             ),
             TextField(
               controller: emailController,
-              decoration: const InputDecoration(labelText: "Email"),
+              decoration: const InputDecoration(labelText: 'Email'),
             ),
             TextField(
               controller: phoneController,
-              decoration: const InputDecoration(labelText: "Phone number"),
+              decoration: const InputDecoration(labelText: 'Phone number'),
             ),
             const SizedBox(height: 20),
             ElevatedButton(
@@ -123,7 +123,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 );
               },
 
-              child: const Text("UPDATE PROFILE"),
+              child: const Text('UPDATE PROFILE'),
             ),
           ],
         ),

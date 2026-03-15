@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ieee_app/models/micro_skill_model.dart';
 import 'package:ieee_app/screens/home/micro_skill_detail_screen.dart';
+import 'package:ieee_app/widgets/common/neo_card.dart';
 
 class MicroSkillsWidget extends StatelessWidget {
   final MicroSkill todaysSkill = MicroSkill(
@@ -15,7 +16,7 @@ class MicroSkillsWidget extends StatelessWidget {
       'Third-party Integrations',
       'Cloud-native Applications'
     ],
-    resources: [
+    resources: const [
       Resource(
         type: 'article',
         title: 'API First Design Principles',
@@ -45,62 +46,83 @@ class MicroSkillsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: NeoCard(
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Row(
                   children: [
-                    CircleAvatar(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      child: Text(
-                        todaysSkill.icon,
-                        style: const TextStyle(fontSize: 16),
+                    Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black, width: 1.5),
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        radius: 16,
+                        child: Text(
+                          todaysSkill.icon,
+                          style: const TextStyle(fontSize: 14),
+                        ),
                       ),
                     ),
                     const SizedBox(width: 12),
                     Text(
-                      'Daily Micro-Skill',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
+                      'DAILY MICRO-SKILL',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.0,
+                        color: Colors.black,
                       ),
                     ),
                   ],
                 ),
-                Chip(
-                  label: const Text('New'),
-                  backgroundColor: Colors.green.withAlpha(51),
-                  labelStyle: const TextStyle(color: Colors.green),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withAlpha(51),
+                    borderRadius: BorderRadius.circular(4),
+                    border: Border.all(color: Colors.green, width: 1.5),
+                  ),
+                  child: const Text(
+                    'NEW',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w900,
+                      fontSize: 10,
+                    ),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 20),
             Text(
               todaysSkill.title,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w900,
+                color: Colors.black,
+                letterSpacing: -0.5,
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             Text(
               todaysSkill.teaser,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withAlpha(178),
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Colors.black87,
+                height: 1.5,
+                fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 24),
             
-            // FIXED: Wrap instead of Row for better responsiveness
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -108,17 +130,41 @@ class MicroSkillsWidget extends StatelessWidget {
                   spacing: 8,
                   runSpacing: 8,
                   children: [
-                    Chip(
-                      label: Text(todaysSkill.category),
-                      backgroundColor: Theme.of(context).colorScheme.primary.withAlpha(51),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).colorScheme.primary.withAlpha(51),
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1),
+                      ),
+                      child: Text(
+                        todaysSkill.category.toUpperCase(),
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.w900,
+                          fontSize: 10,
+                        ),
+                      ),
                     ),
-                    Chip(
-                      label: Text(todaysSkill.difficulty),
-                      backgroundColor: _getDifficultyColor(context, todaysSkill.difficulty),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _getDifficultyColor(todaysSkill.difficulty),
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: _getDifficultyTextColor(todaysSkill.difficulty), width: 1),
+                      ),
+                      child: Text(
+                        todaysSkill.difficulty.toUpperCase(),
+                        style: TextStyle(
+                          color: _getDifficultyTextColor(todaysSkill.difficulty),
+                          fontWeight: FontWeight.w900,
+                          fontSize: 10,
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton.icon(
@@ -132,35 +178,50 @@ class MicroSkillsWidget extends StatelessWidget {
                         ),
                       );
                     },
-                    icon: const Icon(Icons.rocket_launch),
-                    label: const Text('Learn Now'),
+                    icon: const Icon(Icons.rocket_launch_rounded),
+                    label: const Text('LEARN NOW'),
                     style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                      foregroundColor: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(4),
                       ),
+                      elevation: 0,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                   ),
                 ),
               ],
             ),
             
-            const SizedBox(height: 8),
-            const LinearProgressIndicator(
-              value: 0.3,
-              backgroundColor: Colors.grey,
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+            const SizedBox(height: 16),
+            Container(
+              height: 8,
+              decoration: BoxDecoration(
+                color: Colors.black12,
+                borderRadius: BorderRadius.circular(4),
+                border: Border.all(color: Colors.black, width: 1),
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: const LinearProgressIndicator(
+                  value: 0.3,
+                  backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
+                ),
+              ),
             ),
-            const SizedBox(height: 4),
-            const Row(
+            const SizedBox(height: 8),
+            Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Day 3 of 30',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                const Text(
+                  'DAY 3 OF 30',
+                  style: TextStyle(fontSize: 10, color: Colors.black54, fontWeight: FontWeight.w900),
                 ),
-                Text(
-                  '30% complete',
-                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                const Text(
+                  '30% COMPLETE',
+                  style: TextStyle(fontSize: 10, color: Colors.black54, fontWeight: FontWeight.w900),
                 ),
               ],
             ),
@@ -170,7 +231,16 @@ class MicroSkillsWidget extends StatelessWidget {
     );
   }
 
-  Color _getDifficultyColor(BuildContext context, String difficulty) {
+  Color _getDifficultyTextColor(String difficulty) {
+    switch (difficulty.toLowerCase()) {
+      case 'beginner': return Colors.green;
+      case 'intermediate': return Colors.orange;
+      case 'advanced': return Colors.red;
+      default: return Colors.grey;
+    }
+  }
+
+  Color _getDifficultyColor(String difficulty) {
     switch (difficulty.toLowerCase()) {
       case 'beginner':
         return Colors.green.withAlpha(51);

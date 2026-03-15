@@ -5,6 +5,9 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:ieee_app/models/event_model.dart';
 import 'package:ieee_app/screens/events/providers/events_provider.dart';
 
+import 'package:ieee_app/widgets/common/neo_card.dart';
+import 'package:ieee_app/core/theme/app_colors.dart';
+
 class CalendarWidget extends ConsumerStatefulWidget {
   final Function(DateTime) onDateSelected;
 
@@ -38,13 +41,11 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
     final firstDay = DateTime(DateTime.now().year - 1, 1, 1);
     final lastDay = DateTime(DateTime.now().year + 1, 12, 31);
 
-    return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: NeoCard(
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.all(12),
         child: TableCalendar<IEEEEvent>(
           locale: 'en_US',
           firstDay: firstDay,
@@ -96,16 +97,35 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
           calendarBuilders: CalendarBuilders(
             markerBuilder: (context, day, events) {
               if (events.isNotEmpty) {
-                return Container(
-                  width: 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Theme.of(context).colorScheme.primary,
+                // Use varying opacity based on event count for "intensity"
+                final double opacity = (events.length * 0.2 + 0.3).clamp(0.3, 1.0);
+                return Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 6),
+                    width: 5,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: AppColors.premiumBlue.withOpacity(opacity),
+                      border: Border.all(color: AppColors.premiumBlack, width: 0.5),
+                    ),
                   ),
                 );
               }
               return null;
+            },
+            outsideBuilder: (context, day, focusedDay) {
+              return Center(
+                child: Text(
+                  '${day.day}',
+                  style: TextStyle(
+                    color: AppColors.premiumNavy.withOpacity(0.2),
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                  ),
+                ),
+              );
             },
           ),
 
@@ -114,73 +134,74 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
           // =========================
           calendarStyle: CalendarStyle(
             todayDecoration: BoxDecoration(
-              color:
-                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+              color: AppColors.blueTint,
               shape: BoxShape.circle,
               border: Border.all(
-                color: Theme.of(context).colorScheme.primary,
-                width: 1.5,
+                color: AppColors.premiumBlue,
+                width: 3,
               ),
             ),
-            todayTextStyle: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontWeight: FontWeight.bold,
+            todayTextStyle: const TextStyle(
+              color: AppColors.premiumBlue,
+              fontWeight: FontWeight.w900,
               fontSize: 16,
             ),
-            selectedDecoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
+            selectedDecoration: const BoxDecoration(
+              color: AppColors.premiumBlack,
               shape: BoxShape.circle,
             ),
             selectedTextStyle: const TextStyle(
               color: Colors.white,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.w900,
               fontSize: 16,
             ),
-            defaultTextStyle: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[800],
+            defaultTextStyle: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: AppColors.premiumNavy,
             ),
             weekendTextStyle: TextStyle(
-              color: Colors.red[700],
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
+              color: Colors.red[900],
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
             ),
-            outsideDaysVisible: false,
-            cellPadding: const EdgeInsets.all(6),
+            outsideDaysVisible: true,
+            cellPadding: const EdgeInsets.all(2),
+            tableBorder: TableBorder.all(
+              color: AppColors.premiumBlack.withOpacity(0.15),
+              width: 1.5,
+            ),
           ),
 
           headerStyle: HeaderStyle(
             formatButtonVisible: false,
             titleCentered: true,
-            titleTextStyle: TextStyle(
+            titleTextStyle: const TextStyle(
               fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.w900,
+              color: AppColors.premiumNavy,
+              letterSpacing: -0.5,
             ),
-            leftChevronIcon: Icon(
-              Icons.chevron_left,
-              color: Theme.of(context).colorScheme.primary,
-              size: 28,
+            leftChevronIcon: const Icon(Icons.chevron_left_rounded, color: AppColors.premiumBlack, size: 28),
+            rightChevronIcon: const Icon(Icons.chevron_right_rounded, color: AppColors.premiumBlack, size: 28),
+            headerMargin: const EdgeInsets.only(bottom: 12),
+            decoration: BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: AppColors.premiumBlack.withOpacity(0.1), width: 1),
+              ),
             ),
-            rightChevronIcon: Icon(
-              Icons.chevron_right,
-              color: Theme.of(context).colorScheme.primary,
-              size: 28,
-            ),
-            headerPadding: const EdgeInsets.only(bottom: 16),
           ),
 
           daysOfWeekStyle: DaysOfWeekStyle(
             weekdayStyle: TextStyle(
-              color: Colors.grey[700],
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+              color: AppColors.premiumNavy,
+              fontWeight: FontWeight.w900,
+              fontSize: 13,
             ),
             weekendStyle: TextStyle(
-              color: Colors.red[700],
-              fontWeight: FontWeight.bold,
-              fontSize: 14,
+              color: Colors.red,
+              fontWeight: FontWeight.w900,
+              fontSize: 13,
             ),
           ),
 

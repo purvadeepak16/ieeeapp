@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:ieee_app/core/constants/app_constants.dart';
+import 'package:ieee_app/core/theme/app_colors.dart';
 import 'package:ieee_app/models/event_model.dart';
-import 'package:ieee_app/widgets/announcements_section.dart';
-import 'package:ieee_app/widgets/banner_carousel.dart';
-import 'package:ieee_app/widgets/featured_events.dart';
-import 'package:ieee_app/widgets/micro_skills_widget.dart';
-import 'package:ieee_app/widgets/quick_navigation.dart';
-import 'package:ieee_app/screens/events/providers/events_provider.dart';
-import 'package:webview_flutter/webview_flutter.dart';
+import 'package:ieee_app/models/micro_skill_model.dart';
+import 'package:ieee_app/widgets/common/neo_card.dart';
+import 'package:ieee_app/widgets/event_card.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,588 +15,473 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final ScrollController _scrollController = ScrollController();
-  bool _showAppBarTitle = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _scrollController.addListener(() {
-      if (_scrollController.offset > 100 && !_showAppBarTitle) {
-        setState(() => _showAppBarTitle = true);
-      } else if (_scrollController.offset <= 100 && _showAppBarTitle) {
-        setState(() => _showAppBarTitle = false);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _scrollController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          _showAppBarTitle ? 'Home' : 'Home',
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        // Removed search and notifications buttons
-      ),
-      body: RefreshIndicator(
+    return Container(
+      color: AppColors.premiumBackground,
+      child: RefreshIndicator(
         onRefresh: () async {
           await Future.delayed(const Duration(seconds: 1));
           return;
         },
         child: SingleChildScrollView(
-          controller: _scrollController,
-          physics: const ClampingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Welcome Section
+              // Greeting Section
               Padding(
-                padding: const EdgeInsets.all(16),
+                padding: const EdgeInsets.fromLTRB(20, 32, 20, 24),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome Back,',
-                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withAlpha(178),
+                      'Welcome back, Member',
+                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.premiumNavy,
+                            letterSpacing: -1.2,
                           ),
                     ),
+                    const SizedBox(height: 8),
                     Text(
-                      'IEEE Member!',
-                      style:
-                          Theme.of(context).textTheme.headlineMedium?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
+                      'Your technical journey continues here.',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: AppColors.premiumNavy.withValues(alpha: 0.6),
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                   ],
                 ),
               ),
 
-              // Banner Carousel - Fixed with images
-              const BannerCarousel(),
-              const SizedBox(height: 16),
+              // Section: Council Intro
+              _buildIntroSection(context),
+              const SizedBox(height: 48),
 
-              // Micro-Skills Widget
-              MicroSkillsWidget(),
+              // Section 1 - Today's Highlight
+              _buildMicroSkillCard(context),
+              const SizedBox(height: 48),
 
-              // Announcements
-              const AnnouncementsSection(),
+              // Section 2 - Featured Event
+              _buildFeaturedEvent(context),
+              const SizedBox(height: 48),
 
-              // Quick Navigation
-              QuickNavigation(),
-              const SizedBox(height: 16),
+              // Section 3 - Announcements
+              _buildAnnouncementsSection(context),
+              const SizedBox(height: 48),
 
-              // Featured Events
-              const FeaturedEvents(),
-              const SizedBox(height: 24),
-
-              // Upcoming Events Section
-              _UpcomingEventsSection(),
-
-              // Footer
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary.withAlpha(25),
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline,
-                        color: Theme.of(context).colorScheme.primary),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: Text(
-                        'IEEE VESIT - Empowering technology for humanity',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              fontWeight: FontWeight.w500,
-                            ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 20),
+              // Section 4 - Quick Access
+              _buildQuickAccessSection(context),
+              const SizedBox(height: 64),
             ],
           ),
         ),
       ),
     );
   }
-}
 
-class _UpcomingEventsSection extends ConsumerWidget {
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final events = ref.watch(eventsProvider);
-    final upcomingEvents = events
-        .where((event) => event.date
-            .isAfter(DateTime.now().subtract(const Duration(days: 1))))
-        .take(2)
-        .toList();
 
-    if (upcomingEvents.isEmpty) return const SizedBox();
+  Widget _buildMicroSkillCard(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: NeoCard(
+        backgroundColor: AppColors.premiumNavy,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: AppColors.premiumBlue,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: Text(
+                    'SPOTLIGHT',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.5,
+                        ),
+                  ),
+                ),
+                Text(
+                  'LVL 04',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: Colors.white54,
+                        fontWeight: FontWeight.bold,
+                      ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Modern UI Patterns with Flutter',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: Colors.white,
+                    letterSpacing: -0.5,
+                  ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'Master the architecture of premium responsive interfaces.',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.white.withValues(alpha: 0.7),
+                    height: 1.5,
+                  ),
+            ),
+            const SizedBox(height: 28),
+            Row(
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(4),
+                        child: const LinearProgressIndicator(
+                          value: 0.65,
+                          minHeight: 10,
+                          backgroundColor: Colors.white10,
+                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.premiumBlue),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    final todaysSkill = MicroSkill(
+                      id: '1',
+                      title: 'Modern UI Patterns with Flutter',
+                      teaser: 'Master the architecture of premium responsive interfaces.',
+                      fullDescription: 'API First Design is an approach where the API specification is designed before any implementation begins.',
+                      category: 'Engineering',
+                      useCases: ['Architecture', 'Design Systems'],
+                      resources: [],
+                      icon: '⚡',
+                      date: DateTime.now(),
+                      difficulty: 'advanced',
+                      externalUrl: 'https://ieee.org',
+                    );
+                    context.push('/micro-skill/${todaysSkill.id}', extra: todaysSkill);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: AppColors.premiumNavy,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  ),
+                  child: const Text('CONTINUE', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5)),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Row(
+  Widget _buildFeaturedEvent(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Featured Event',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 16),
+        NeoCard(
+          padding: EdgeInsets.zero,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    height: 200,
+                    width: double.infinity,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage('https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 16,
+                    right: 16,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.premiumBlack, width: 2),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: AppColors.premiumBlack,
+                            offset: Offset(3, 3),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Text(
+                            '24',
+                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  color: AppColors.premiumBlue,
+                                  fontWeight: FontWeight.w900,
+                                ),
+                          ),
+                          Text(
+                            'FEB',
+                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.0,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'IEEE Tech Nexus 2026',
+                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: AppColors.premiumNavy,
+                            letterSpacing: -0.5,
+                          ),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Icon(Icons.location_on_rounded, size: 18, color: AppColors.premiumBlue),
+                        const SizedBox(width: 8),
+                        Text(
+                          'VESIT Campus • 09:00 AM',
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            color: AppColors.premiumNavy.withValues(alpha: 0.6),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          final featuredEvent = IEEEEvent(
+                            title: 'IEEE Tech Nexus 2026',
+                            description: 'Join us for the flagship technical symposium of IEEE VESIT.',
+                            date: DateTime(2026, 2, 24),
+                            startTime: const TimeOfDay(hour: 9, minute: 0),
+                            venue: 'VESIT Campus',
+                            type: EventType.conference,
+                            registrationLink: 'https://ieee.org',
+                            tags: ['Tech', 'Navy', 'Premium'],
+                            isFeatured: true,
+                          );
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+                            builder: (context) => EventDetailsSheet(event: featuredEvent),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.premiumBlack,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child: const Text('VIEW DETAILS', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.0)),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAnnouncementsSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Upcoming Events',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
+                'Announcements',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.premiumNavy,
+                      letterSpacing: -0.5,
                     ),
               ),
               TextButton(
-                onPressed: () {
-                  // Navigate to events page
-                  Navigator.pushNamed(context, '/events');
-                },
-                child: const Text('View Calendar'),
+                onPressed: () {},
+                child: Text('VIEW ALL', style: const TextStyle(color: AppColors.premiumBlue, fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 1.0)),
               ),
             ],
           ),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Column(
-            children: upcomingEvents.map((event) {
-              return Card(
-                margin: const EdgeInsets.only(bottom: 12),
-                child: ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: _getEventColor(event.type).withAlpha(51),
-                    child: Icon(
-                      _getEventIcon(event.type),
-                      color: _getEventColor(event.type),
-                    ),
-                  ),
-                  title: Text(event.title),
-                  subtitle: Text('${_formatDate(event.date)} • ${event.venue}'),
-                  trailing: ElevatedButton(
-                    onPressed: () {
-                      // Show event card details
-                      _showEventCard(context, event);
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                    child: const Text(
-                      'Details',
-                      style: TextStyle(color: Colors.white, fontSize: 12),
-                    ),
-                  ),
-                  onTap: () {
-                    // Show event card details
-                    _showEventCard(context, event);
-                  },
-                ),
-              );
-            }).toList(),
+          const SizedBox(height: 8),
+          _buildAnnouncementItem(
+            context,
+            'Membership Renewals Started',
+            'Feb 15, 2026',
           ),
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-
-  Color _getEventColor(EventType type) {
-    switch (type) {
-      case EventType.workshop:
-        return Colors.blue;
-      case EventType.competition:
-        return Colors.orange;
-      case EventType.conference:
-        return Colors.green;
-      case EventType.meeting:
-        return Colors.purple;
-      case EventType.deadline:
-        return Colors.red;
-      default:
-        return Colors.blue;
-    }
-  }
-
-  IconData _getEventIcon(EventType type) {
-    switch (type) {
-      case EventType.workshop:
-        return Icons.workspaces;
-      case EventType.competition:
-        return Icons.emoji_events;
-      case EventType.conference:
-        return Icons.groups;
-      case EventType.meeting:
-        return Icons.meeting_room;
-      case EventType.deadline:
-        return Icons.alarm;
-      default:
-        return Icons.event;
-    }
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
-  }
-
-  void _showEventCard(BuildContext context, IEEEEvent event) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => EventDetailsSheet(event: event),
-    );
-  }
-}
-
-// Event Details Sheet (Simplified version)
-class EventDetailsSheet extends StatelessWidget {
-  final IEEEEvent event;
-
-  const EventDetailsSheet({
-    super.key,
-    required this.event,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return DraggableScrollableSheet(
-      initialChildSize: 0.7,
-      minChildSize: 0.5,
-      maxChildSize: 0.9,
-      expand: false,
-      builder: (context, scrollController) {
-        return SingleChildScrollView(
-          controller: scrollController,
-          child: Padding(
-            padding: const EdgeInsets.all(24),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Drag handle
-                Center(
-                  child: Container(
-                    width: 40,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[300],
-                      borderRadius: BorderRadius.circular(2),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 24),
-
-                // Event Type
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: event.typeColor.withAlpha(51),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    event.typeLabel,
-                    style: TextStyle(
-                      color: event.typeColor,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Title
-                Text(
-                  event.title,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 16),
-
-                // Date & Time
-                Row(
-                  children: [
-                    Icon(
-                      Icons.calendar_today,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Date',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        Text(
-                          event.formattedDate,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(width: 24),
-                    Icon(
-                      Icons.access_time,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Time',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        Text(
-                          event.formattedTime,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Venue
-                Row(
-                  children: [
-                    Icon(
-                      Icons.location_on,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 20,
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Venue',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                        Text(
-                          event.venue,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 24),
-
-                // Description
-                Text(
-                  'Description',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  event.description,
-                  style: const TextStyle(
-                    fontSize: 15,
-                    height: 1.5,
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Register Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => _openRegistrationForm(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.assignment, size: 20),
-                        SizedBox(width: 10),
-                        Text(
-                          'Open Registration Form',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  void _openRegistrationForm(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => RegistrationWebView(url: event.registrationLink),
-    );
-  }
-}
-
-// Registration WebView
-class RegistrationWebView extends StatefulWidget {
-  final String url;
-
-  const RegistrationWebView({super.key, required this.url});
-
-  @override
-  State<RegistrationWebView> createState() => _RegistrationWebViewState();
-}
-
-class _RegistrationWebViewState extends State<RegistrationWebView> {
-  late final WebViewController controller;
-  var isLoading = true;
-  var progress = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    controller = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.white)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            setState(() {
-              this.progress = progress;
-            });
-          },
-          onPageStarted: (String url) {
-            setState(() => isLoading = true);
-          },
-          onPageFinished: (String url) {
-            setState(() => isLoading = false);
-          },
-          onWebResourceError: (WebResourceError error) {
-            // Handle error
-          },
-          onNavigationRequest: (NavigationRequest request) {
-            return NavigationDecision.navigate;
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.url));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.85,
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary,
-              borderRadius: const BorderRadius.vertical(
-                top: Radius.circular(20),
-              ),
-            ),
-            child: Row(
-              children: [
-                IconButton(
-                  icon: const Icon(Icons.close, color: Colors.white),
-                  onPressed: () => Navigator.pop(context),
-                ),
-                const SizedBox(width: 8),
-                const Expanded(
-                  child: Text(
-                    'Registration Form',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.refresh, color: Colors.white),
-                  onPressed: () => controller.reload(),
-                ),
-              ],
-            ),
-          ),
-          if (isLoading)
-            LinearProgressIndicator(
-              value: progress / 100,
-              backgroundColor: Colors.grey[200],
-              color: Theme.of(context).colorScheme.primary,
-              minHeight: 2,
-            ),
-          Expanded(
-            child: WebViewWidget(controller: controller),
+          const Divider(height: 1, color: AppColors.border),
+          _buildAnnouncementItem(
+            context,
+            'Call for Paper: IEEE AISC 2026',
+            'Feb 12, 2026',
           ),
         ],
       ),
     );
   }
+
+  Widget _buildAnnouncementItem(BuildContext context, String title, String date) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.premiumNavy,
+                  ),
+            ),
+          ),
+          Text(
+            date.toUpperCase(),
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: AppColors.premiumNavy.withValues(alpha: 0.5),
+              fontWeight: FontWeight.w900,
+              letterSpacing: 0.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickAccessSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Quick Access',
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Expanded(child: _buildQuickAccessBtn(context, Icons.people_outline_rounded, 'Members', Colors.blue, AppConstants.membersPath)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildQuickAccessBtn(context, Icons.event_note_rounded, 'Calendar', Colors.orange, AppConstants.eventsPath)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildQuickAccessBtn(context, Icons.menu_book_rounded, 'Magazine', Colors.teal, AppConstants.magazinePath)),
+              const SizedBox(width: 12),
+              Expanded(child: _buildQuickAccessBtn(context, Icons.contact_support_outlined, 'Support', Colors.purple, AppConstants.aboutPath)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickAccessBtn(BuildContext context, IconData icon, String label, Color color, String route) {
+    return NeoCard(
+      onTap: () => context.go(route),
+      backgroundColor: Colors.white,
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+      borderRadius: 12,
+      showBorder: true,
+      showShadow: true,
+      child: Column(
+        children: [
+          Icon(icon, color: AppColors.premiumBlue, size: 24),
+          const SizedBox(height: 12),
+          Text(
+            label.toUpperCase(),
+            style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: AppColors.premiumNavy,
+                  fontSize: 9,
+                  letterSpacing: 0.5,
+                ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildIntroSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: NeoCard(
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'IEEE-VESIT',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: AppColors.premiumBlue,
+                    letterSpacing: -0.5,
+                  ),
+            ),
+            const SizedBox(height: 16),
+            Text(
+              'At IEEE-VESIT we aim at fostering both technical excellence and vibrant student engagement. From cutting-edge workshops and seminars to fun, enriching events, we ensure a perfect balance between academics and co-curriculars.\n\nBacked by international IEEE membership, students gain global exposure — from writing research papers to getting published. Whether it’s placements, higher studies, or hands-on learning, IEEE-VESIT is your one-stop society for it all.',
+              textAlign: TextAlign.justify,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    height: 1.6,
+                    color: AppColors.premiumNavy.withOpacity(0.8),
+                    fontWeight: FontWeight.w500,
+                  ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
+
+
+

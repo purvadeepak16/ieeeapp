@@ -18,20 +18,36 @@ class AppScaffold extends StatelessWidget {
     final String location = GoRouterState.of(context).uri.toString();
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground, // Or context.theme.scaffoldBackgroundColor
+      backgroundColor: AppColors.lightBackground,
       appBar: AppBar(
-        title: const Text('IEEE VESIT'), // Dynamic title logic can be added later
+        leading: IconButton(
+          icon: const Icon(Icons.menu_rounded, size: 24),
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+        ),
+        title: Text(
+          'IEEE VESIT',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                letterSpacing: -0.5,
+              ),
+        ),
+        centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.notifications_outlined),
+            icon: const Icon(Icons.notifications_none_rounded, size: 24),
             onPressed: () {},
           ),
+          const SizedBox(width: 8),
         ],
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       drawer: const AppDrawer(),
       body: child,
       bottomNavigationBar: BottomNavBar(location: location),
-
     );
   }
+
 }

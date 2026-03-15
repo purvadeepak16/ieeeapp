@@ -2,11 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:ieee_app/models/event_model.dart';
-// ADD THIS LINE
-import 'package:webview_flutter_android/webview_flutter_android.dart';  // ADD THIS LINE
-import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';  // ADD THIS LINE
+import 'package:ieee_app/widgets/common/neo_card.dart';
+import 'package:webview_flutter_android/webview_flutter_android.dart';
+import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
+import 'package:ieee_app/core/theme/app_colors.dart';
+
+import 'package:ieee_app/widgets/common/neo_button.dart';
 
 class EventCard extends ConsumerWidget {
   final IEEEEvent event;
@@ -20,165 +23,180 @@ class EventCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Card(
-      elevation: 2,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: event.typeColor.withValues(alpha: 0.2),
-          width: 1,
-        ),
-      ),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () => _showEventDetails(context),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Type & Featured
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: event.typeColor.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Text(
-                      event.typeLabel,
-                      style: TextStyle(
-                        color: event.typeColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                  if (event.isFeatured)
-                    const Icon(Icons.star, color: Colors.amber, size: 16),
-                ],
+    return NeoCard(
+      padding: EdgeInsets.zero,
+      onTap: () => _showEventDetails(context),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Distinctive Header
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            decoration: BoxDecoration(
+              color: event.typeColor,
+              border: const Border(
+                bottom: BorderSide(color: AppColors.premiumBlack, width: 2),
               ),
-
-              const SizedBox(height: 8),
-
-              // Title
-              Text(
-                event.title,
-                style: const TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold,
-                ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-
-              const SizedBox(height: 6),
-
-              // Date & Time
-              Row(
-                children: [
-                  Icon(
-                    Icons.calendar_today,
-                    size: 12,
-                    color: Colors.grey[600],
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    event.formattedDate,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Icon(
-                    Icons.access_time,
-                    size: 12,
-                    color: Colors.grey[600],
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    event.formattedTime,
-                    style: TextStyle(
-                      fontSize: 11,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 4),
-
-              // Venue
-              Row(
-                children: [
-                  Icon(
-                    Icons.location_on,
-                    size: 12,
-                    color: Colors.grey[600],
-                  ),
-                  const SizedBox(width: 4),
-                  Expanded(
-                    child: Text(
-                      event.venue,
-                      style: TextStyle(
-                        fontSize: 11,
-                        color: Colors.grey[700],
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-
-              if (!compact) ...[
-                const SizedBox(height: 8),
-
-                // Description
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 Text(
-                  event.description,
-                  style: const TextStyle(fontSize: 13),
+                  event.typeLabel.toUpperCase(),
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.2,
+                  ),
+                ),
+                if (event.isFeatured)
+                  const Icon(Icons.star, color: Colors.white, size: 16),
+              ],
+            ),
+          ),
+
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Title
+                Text(
+                  event.title,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        height: 1.1,
+                        color: AppColors.premiumNavy,
+                        fontSize: compact ? 18 : 22,
+                      ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                 ),
 
-                const SizedBox(height: 8),
+                SizedBox(height: compact ? 12 : 16),
 
-                // Register Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => _openRegistrationForm(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                // Date & Time
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: AppColors.blueTint,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.premiumBlack, width: 1.5),
+                      ),
+                      child: const Icon(
+                        Icons.calendar_today_rounded,
+                        size: 10,
+                        color: AppColors.premiumBlack,
                       ),
                     ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.assignment, size: 16),
-                        SizedBox(width: 6),
-                        Text(
-                          'Open Registration Form',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                          ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        event.formattedDate,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.premiumBlack.withOpacity(0.8),
+                              fontSize: 10,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: AppColors.orangeTint,
+                        borderRadius: BorderRadius.circular(4),
+                        border: Border.all(color: AppColors.premiumBlack, width: 1.5),
+                      ),
+                      child: const Icon(
+                        Icons.access_time_rounded,
+                        size: 10,
+                        color: AppColors.premiumBlack,
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        event.formattedTime,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: AppColors.premiumBlack.withOpacity(0.8),
+                              fontSize: 10,
+                            ),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Venue
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.location_on_rounded,
+                      size: 14,
+                      color: AppColors.premiumBlack,
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        event.venue,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              fontWeight: FontWeight.w800,
+                              color: AppColors.premiumBlack.withOpacity(0.6),
+                            ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+
+                if (!compact) ...[
+                  const SizedBox(height: 20),
+
+                  // Description
+                  Text(
+                    event.description,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          height: 1.5,
+                          color: AppColors.premiumBlack.withOpacity(0.7),
+                          fontWeight: FontWeight.w500,
                         ),
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Register Button
+                  NeoButton(
+                    onPressed: () => _openRegistrationForm(context),
+                    isExpanded: true,
+                    backgroundColor: AppColors.premiumBlue,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Icon(Icons.assignment_rounded, size: 18),
+                        SizedBox(width: 8),
+                        Text('REGISTER NOW'),
                       ],
                     ),
                   ),
-                ),
+                ],
               ],
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -378,7 +396,7 @@ class EventDetailsSheet extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: event.typeColor.withValues(alpha: 0.1),
+                    color: event.typeColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -395,10 +413,10 @@ class EventDetailsSheet extends StatelessWidget {
                 // Title
                 Text(
                   event.title,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        color: AppColors.premiumNavy,
+                      ),
                 ),
 
                 const SizedBox(height: 16),
@@ -406,54 +424,66 @@ class EventDetailsSheet extends StatelessWidget {
                 // Date & Time
                 Row(
                   children: [
-                    Icon(
-                      Icons.calendar_today,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 20,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.blueTint,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.calendar_today_rounded,
+                        color: AppColors.premiumBlue,
+                        size: 20,
+                      ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Date',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
+                          'DATE',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: AppColors.premiumBlue,
+                                fontWeight: FontWeight.w900,
+                              ),
                         ),
                         Text(
                           event.formattedDate,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w800,
+                              ),
                         ),
                       ],
                     ),
-                    const SizedBox(width: 24),
-                    Icon(
-                      Icons.access_time,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 20,
+                    const SizedBox(width: 32),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.orangeTint,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.access_time_rounded,
+                        color: Colors.orange,
+                        size: 20,
+                      ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Time',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
+                          'TIME',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: Colors.orange,
+                                fontWeight: FontWeight.w900,
+                              ),
                         ),
                         Text(
                           event.formattedTime,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w800,
+                              ),
                         ),
                       ],
                     ),
@@ -465,28 +495,34 @@ class EventDetailsSheet extends StatelessWidget {
                 // Venue
                 Row(
                   children: [
-                    Icon(
-                      Icons.location_on,
-                      color: Theme.of(context).colorScheme.primary,
-                      size: 20,
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: AppColors.surfaceMuted,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: const Icon(
+                        Icons.location_on_rounded,
+                        color: AppColors.premiumNavy,
+                        size: 20,
+                      ),
                     ),
-                    const SizedBox(width: 8),
+                    const SizedBox(width: 12),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Venue',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
+                          'VENUE',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: AppColors.premiumNavy.withOpacity(0.6),
+                                fontWeight: FontWeight.w900,
+                              ),
                         ),
                         Text(
                           event.venue,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                fontWeight: FontWeight.w800,
+                              ),
                         ),
                       ],
                     ),
@@ -545,24 +581,25 @@ class EventDetailsSheet extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () => _openRegistrationForm(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: AppColors.premiumBlack,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 20),
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(4),
                       ),
                     ),
-                    child: const Row(
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.assignment, size: 20),
-                        SizedBox(width: 10),
+                        const Icon(Icons.assignment_rounded, size: 20),
+                        const SizedBox(width: 12),
                         Text(
-                          'Open Registration Form',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
+                          'OPEN REGISTRATION FORM',
+                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 2.0,
+                              ),
                         ),
                       ],
                     ),

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ieee_app/models/event_model.dart';
 import 'package:ieee_app/screens/events/providers/events_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:ieee_app/widgets/common/neo_card.dart';
+import 'package:ieee_app/core/theme/app_colors.dart';
 
 class AnnouncementsSection extends ConsumerWidget {
   const AnnouncementsSection({super.key});
@@ -12,11 +14,11 @@ class AnnouncementsSection extends ConsumerWidget {
     final events = ref.watch(eventsProvider);
     final upcomingEvents = events.take(3).toList(); // Show first 3 events as announcements
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      elevation: 2,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: NeoCard(
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -24,9 +26,11 @@ class AnnouncementsSection extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Announcements',
+                  'ANNOUNCEMENTS',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.0,
+                    color: AppColors.premiumNavy,
                   ),
                 ),
                 TextButton(
@@ -34,41 +38,63 @@ class AnnouncementsSection extends ConsumerWidget {
                     // Navigate to events page
                     Navigator.pushNamed(context, '/events');
                   },
-                  child: const Text('View All'),
+                  child: const Text(
+                    'VIEW ALL',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w900,
+                      color: AppColors.premiumBlue,
+                      fontSize: 12,
+                    ),
+                  ),
                 ),
               ],
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 12),
             ...upcomingEvents.map((event) {
-              return ListTile(
-                contentPadding: const EdgeInsets.symmetric(vertical: 4),
-                leading: CircleAvatar(
-                  backgroundColor: _getEventColor(event.type).withAlpha(51),
-                  child: Icon(
-                    _getEventIcon(event.type),
-                    color: _getEventColor(event.type),
+              return Column(
+                children: [
+                  ListTile(
+                    contentPadding: EdgeInsets.zero,
+                    leading: Container(
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.black, width: 1.5),
+                      ),
+                      child: CircleAvatar(
+                        backgroundColor: _getEventColor(event.type).withAlpha(51),
+                        child: Icon(
+                          _getEventIcon(event.type),
+                          color: _getEventColor(event.type),
+                          size: 18,
+                        ),
+                      ),
+                    ),
+                    title: Text(
+                      event.title,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w900,
+                        color: Color(0xFF1A1A1A),
+                        fontSize: 14,
+                      ),
+                    ),
+                    subtitle: Text(
+                      event.formattedDate.toUpperCase(),
+                      style: const TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w900,
+                        color: Colors.black54,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                    trailing: const Icon(Icons.chevron_right_rounded, color: Colors.black),
+                    onTap: () {
+                      // Show event card details
+                      _showEventCard(context, event);
+                    },
                   ),
-                ),
-                title: Text(
-                  event.title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-                subtitle: Text(
-                  event.description.length > 80 
-                      ? '${event.description.substring(0, 80)}...' 
-                      : event.description,
-                  style: const TextStyle(fontSize: 12),
-                ),
-                trailing: Text(
-                  '${event.date.day}/${event.date.month}',
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
-                ),
-                onTap: () {
-                  // Show event card details
-                  _showEventCard(context, event);
-                },
+                  if (upcomingEvents.last != event)
+                    const Divider(height: 1, color: Colors.black12),
+                ],
               );
             }),
           ],

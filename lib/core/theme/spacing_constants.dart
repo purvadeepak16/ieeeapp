@@ -11,4 +11,11 @@ class AppSpacing {
   static const double radiusSm = 8.0;
   static const double radiusMd = 12.0;
   static const double radiusLg = 16.0;
+  static const double radiusCustom = 16.0;
+  static const double radiusXl = 24.0;
+  static const double radiusProfileCard = 20.0;
+
+  // Neo-Brutalism specific
+  static const double neoBorderWidth = 2.5;
+  static const double neoShadowOffset = 4.0;
 }

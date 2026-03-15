@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ieee_app/widgets/common/neo_card.dart';
 
 class ProfileSectionCard extends StatelessWidget {
   final List<Widget> children;
@@ -10,20 +11,13 @@ class ProfileSectionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(14),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.06),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
-          ),
-        ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      child: NeoCard(
+        backgroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Column(children: children),
       ),
-      child: Column(children: children),
     );
   }
 }

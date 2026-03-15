@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../screens/profile/profile_screen.dart';
+import 'package:ieee_app/screens/profile/profile_screen.dart';
 
 class AppRoutes {
   static const profile = '/';
