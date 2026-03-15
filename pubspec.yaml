@@ -25,6 +25,8 @@ dependencies:
   webview_flutter_wkwebview: ^3.23.5
   smooth_page_indicator: ^1.0.0
   share_plus: ^7.2.1
+  ionicons: ^0.2.2
+  url_launcher: ^6.3.2
 
 
 dev_dependencies:

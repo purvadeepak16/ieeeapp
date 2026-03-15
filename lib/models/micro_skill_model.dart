@@ -12,7 +12,7 @@ class MicroSkill {
   final DateTime date;
   final String difficulty; // beginner, intermediate, advanced
 
-  MicroSkill({
+  const MicroSkill({
     required this.id,
     required this.title,
     required this.teaser,
@@ -51,7 +51,7 @@ class Resource {
   final String url;
   final String description;
 
-  Resource({
+  const Resource({
     required this.type,
     required this.title,
     required this.url,

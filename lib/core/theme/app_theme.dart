@@ -27,31 +27,32 @@ class AppTheme {
       appBarTheme: const AppBarTheme(
         elevation: 0,
         centerTitle: true,
-        backgroundColor: AppColors.white,
+        backgroundColor: AppColors.lightBackground,
         foregroundColor: AppColors.textDark,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
       ),
       cardTheme: CardThemeData(
-        elevation: 2,
-        color: AppColors.white,
+        elevation: 0,
+        color: Colors.white,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusCustom),
+          side: const BorderSide(color: AppColors.neoDarkBorder, width: AppSpacing.neoBorderWidth),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
         fillColor: AppColors.white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: const BorderSide(color: AppColors.border),
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: const BorderSide(color: AppColors.border),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
           borderSide: const BorderSide(color: AppColors.primaryBlue, width: 2),
         ),
         contentPadding: const EdgeInsets.symmetric(
@@ -61,19 +62,23 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryBlue,
-          foregroundColor: AppColors.white,
+          backgroundColor: AppColors.premiumBlack,
+          foregroundColor: Colors.white,
+          elevation: 0,
           padding: const EdgeInsets.symmetric(
             horizontal: AppSpacing.lg,
             vertical: AppSpacing.md,
           ),
+          textStyle: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+            borderRadius: BorderRadius.circular(4),
+            side: const BorderSide(color: AppColors.premiumBlack, width: 1),
           ),
         ),
       ),
     );
   }
+
 
   static ThemeData get darkTheme {
     return ThemeData(
@@ -100,11 +105,12 @@ class AppTheme {
         systemOverlayStyle: SystemUiOverlayStyle.light,
       ),
       cardTheme: CardThemeData(
-        elevation: 2,
+        elevation: 0,
         color: AppColors.surfaceDark,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+          borderRadius: BorderRadius.circular(AppSpacing.radiusCustom),
+          side: const BorderSide(color: Colors.white, width: AppSpacing.neoBorderWidth),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
@@ -125,10 +131,13 @@ class AppTheme {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primaryBlue,
-          foregroundColor: AppColors.white,
+          backgroundColor: Colors.white,
+          foregroundColor: AppColors.premiumBlack,
+          elevation: 0,
+          textStyle: const TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.0),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppSpacing.radiusSm),
+            borderRadius: BorderRadius.circular(4),
+            side: const BorderSide(color: Colors.white, width: 1),
           ),
         ),
       ),

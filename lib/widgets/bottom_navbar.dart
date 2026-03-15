@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ieee_app/core/constants/app_constants.dart';
+import 'package:ieee_app/core/theme/app_colors.dart';
 
 class BottomNavBar extends StatelessWidget {
   final String location;
@@ -19,46 +20,50 @@ class BottomNavBar extends StatelessWidget {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: Colors.black.withValues(alpha: 0.04),
             blurRadius: 20,
-            offset: const Offset(0, -5),
+            offset: const Offset(0, -4),
           ),
         ],
       ),
       child: SafeArea(
         child: Container(
-          height: 65,
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          height: 70,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               _buildNavItem(
                 context,
-                icon: Icons.badge_outlined, 
-                activeIcon: Icons.badge,
-                label: 'About',
+                icon: Icons.home_outlined,
+                activeIcon: Icons.home_rounded,
+                label: 'Home',
                 index: 0,
                 currentIndex: currentIndex,
-                onTap: () => context.go(AppConstants.aboutPath),
+                onTap: () => context.go(AppConstants.homePath),
               ),
               _buildNavItem(
                 context,
                 icon: Icons.calendar_today_outlined,
-                activeIcon: Icons.calendar_today,
+                activeIcon: Icons.calendar_today_rounded,
                 label: 'Events',
                 index: 1,
                 currentIndex: currentIndex,
                 onTap: () => context.go(AppConstants.eventsPath),
               ),
-              _buildCenterItem(
+              _buildNavItem(
                 context,
-                isSelected: currentIndex == 2,
+                icon: Icons.groups_outlined,
+                activeIcon: Icons.groups_rounded,
+                label: 'Members',
+                index: 2,
+                currentIndex: currentIndex,
                 onTap: () => context.go(AppConstants.membersPath),
               ),
               _buildNavItem(
                 context,
                 icon: Icons.menu_book_outlined,
-                activeIcon: Icons.menu_book,
+                activeIcon: Icons.menu_book_rounded,
                 label: 'Magazine',
                 index: 3,
                 currentIndex: currentIndex,
@@ -66,8 +71,8 @@ class BottomNavBar extends StatelessWidget {
               ),
               _buildNavItem(
                 context,
-                icon: Icons.person_outline,
-                activeIcon: Icons.person,
+                icon: Icons.person_outline_rounded,
+                activeIcon: Icons.person_rounded,
                 label: 'Profile',
                 index: 4,
                 currentIndex: currentIndex,
@@ -90,80 +95,51 @@ class BottomNavBar extends StatelessWidget {
     required VoidCallback onTap,
   }) {
     final isSelected = index == currentIndex;
-    // Dark dark blue for selected, dark grey for unselected
-    final color = isSelected ? const Color(0xFF001540) : const Color(0xFF555555);
-    final iconData = isSelected ? activeIcon : icon;
-
-    return InkWell(
-      onTap: onTap,
-      splashColor: Colors.transparent, 
-      highlightColor: Colors.transparent,
-      child: Container(
-        width: 60, 
-        padding: const EdgeInsets.symmetric(vertical: 4.0),
+    final color = isSelected ? AppColors.primaryBlue : AppColors.textDark.withValues(alpha: AppColors.textMutedOpacity);
+    
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        splashColor: AppColors.primaryBlue.withValues(alpha: 0.05),
+        highlightColor: Colors.transparent,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(
-              iconData, 
-              color: color, 
-              size: 26
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: isSelected ? AppColors.primaryBlue.withValues(alpha: 0.08) : Colors.transparent,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(
+                isSelected ? activeIcon : icon,
+                color: color,
+                size: 24,
+              ),
             ),
             const SizedBox(height: 4),
             Text(
               label,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                fontSize: 11,
-                color: color,
-                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-              ),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: color,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
+                    fontSize: 10,
+                  ),
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildCenterItem(
-    BuildContext context, {
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        // margin: const EdgeInsets.only(bottom: 25), // Removed floating margin
-        height: 50, // Slightly smaller to match alignment better
-        width: 50,
-        decoration: BoxDecoration(
-          color: const Color(0xFFA8C7FA), 
-          borderRadius: BorderRadius.circular(14), 
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF000000).withValues(alpha: 0.1),
-              blurRadius: 4,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: const Icon(
-          Icons.groups_rounded,
-          color: Color(0xFF001540), 
-          size: 28, // Adjusted size to be closer to others (26)
         ),
       ),
     );
   }
 
   int _getIndexFromLocation(String location) {
-    if (location.startsWith(AppConstants.aboutPath)) return 0;
+    if (location.startsWith(AppConstants.homePath)) return 0;
     if (location.startsWith(AppConstants.eventsPath)) return 1;
-    if (location.startsWith(AppConstants.membersPath)) return 2; // Members is now center
+    if (location.startsWith(AppConstants.membersPath)) return 2;
     if (location.startsWith(AppConstants.magazinePath)) return 3;
     if (location.startsWith(AppConstants.profilePath)) return 4;
- 
-    return 2;
+    return 0;
   }
 }
+

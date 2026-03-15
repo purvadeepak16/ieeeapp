@@ -95,7 +95,7 @@ class MemberDetailScreen extends StatelessWidget {
                               border: Border.all(color: Colors.white.withOpacity(0.25)),
                             ),
                             child: Text(
-                              member.role.isEmpty ? "Member" : member.role,
+                              member.role.isEmpty ? 'Member' : member.role,
                               style: const TextStyle(
                                 color: Colors.white70,
                                 fontSize: 14,

@@ -9,8 +9,10 @@ import 'package:ieee_app/screens/events/events_screen.dart';
 import 'package:ieee_app/screens/magazine/magazine_screen.dart';
 import 'package:ieee_app/screens/profile/profile_screen.dart';
 import 'package:ieee_app/screens/about/about_screen.dart';
+import 'package:ieee_app/screens/onboarding_screen.dart';
 import 'package:ieee_app/screens/login_screen.dart';
 import 'package:ieee_app/screens/register_screen.dart';
+import 'package:ieee_app/screens/wie/wie_page.dart';
 import 'package:ieee_app/screens/home/micro_skill_detail_screen.dart';
 import 'package:ieee_app/models/micro_skill_model.dart';
 
@@ -20,7 +22,7 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     navigatorKey: _rootNavigatorKey,
-    initialLocation: AppConstants.loginPath,
+    initialLocation: AppConstants.onboardingPath,
     debugLogDiagnostics: true,
     routes: [
       ShellRoute(
@@ -66,6 +68,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             ),
           ),
           GoRoute(
+            path: AppConstants.wiePath,
+            pageBuilder: (context, state) => const NoTransitionPage(
+              child: WiePage(),
+            ),
+          ),
+          GoRoute(
             path: '/micro-skill/:id',
             builder: (context, state) {
               // You'll need to pass the MicroSkill object via extra
@@ -74,6 +82,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             },
           ),
         ],
+      ),
+      GoRoute(
+        path: AppConstants.onboardingPath,
+        builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
         path: AppConstants.loginPath,

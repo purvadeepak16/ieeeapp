@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ieee_app/data/council_members_data.dart';
 import 'package:ieee_app/models/council_member_model.dart';
 import 'package:ieee_app/widgets/council_member_card.dart';
-import 'member_detail_screen.dart';
+import 'package:ieee_app/screens/members/member_detail_screen.dart';
 
 class MembersScreen extends StatelessWidget {
   const MembersScreen({super.key});
@@ -83,50 +83,17 @@ class MembersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final branch = CouncilMembersData.branchCounsellors;
-    final senior = CouncilMembersData.seniorCouncil;
-    final junior = CouncilMembersData.juniorCouncil;
-    final se = CouncilMembersData.seCouncil;
+    const branch = CouncilMembersData.branchCounsellors;
+    const senior = CouncilMembersData.seniorCouncil;
+    const junior = CouncilMembersData.juniorCouncil;
+    const se = CouncilMembersData.seCouncil;
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
-            // Header
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: const Color(0xFF1A237E), width: 2),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Image.asset(
-                        'assets/images/logos/ieee_logo.png',
-                        width: 24,
-                        height: 24,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
 
-                  const Text(
-                    'IEEE Council',
-                    style: TextStyle(
-                      color: Color(0xFF1A237E),
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
 
             Expanded(
               child: ListView(
@@ -150,28 +117,7 @@ class MembersScreen extends StatelessWidget {
               ),
             ),
 
-            // Send Message Button
-            Padding(
-              padding:
-              const EdgeInsets.symmetric(horizontal: 40.0, vertical: 20.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1A237E),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                  ),
-                  child: const Text(
-                    'Send Message',
-                    style: TextStyle(fontSize: 16, color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
+
           ],
         ),
       ),

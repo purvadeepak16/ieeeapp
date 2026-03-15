@@ -4,6 +4,8 @@ import 'package:ieee_app/core/theme/app_theme.dart';
 import 'package:ieee_app/core/constants/app_constants.dart';
 import 'package:ieee_app/routes/app_routes.dart';
 
+import 'package:ieee_app/core/providers/theme_provider.dart';
+
 void main() {
   runApp(const ProviderScope(child: IEEEApp()));
 }
@@ -14,13 +16,14 @@ class IEEEApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final goRouter = ref.watch(goRouterProvider);
+    final themeMode = ref.watch(themeProvider);
 
     return MaterialApp.router(
       title: AppConstants.appName,
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system, // Supports system theme
+      themeMode: themeMode,
       routerConfig: goRouter,
     );
   }

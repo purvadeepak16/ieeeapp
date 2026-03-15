@@ -18,4 +18,6 @@ class AppConstants {
   static const String eventsPath = '/events';
   static const String loginPath = '/login';
   static const String registerPath = '/register';
+  static const String onboardingPath = '/onboarding';
+  static const String wiePath = '/wie';
 }

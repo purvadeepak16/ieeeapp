@@ -33,6 +33,15 @@ class AppDrawer extends StatelessWidget {
                     Navigator.pop(context); // Close drawer
                   },
                 ),
+                _buildDrawerItem(
+                  context,
+                  icon: Icons.engineering,
+                  label: 'Women in Engineering',
+                  onTap: () {
+                    context.go(AppConstants.wiePath);
+                    Navigator.pop(context); // Close drawer after navigation
+                  },
+                ),
                  const Divider(color: AppColors.border),
                 _buildDrawerItem(
                   context,
