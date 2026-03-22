@@ -36,6 +36,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final events = ref.watch(eventsProvider);
 
     final firstDay = DateTime(DateTime.now().year - 1, 1, 1);
@@ -44,7 +45,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: NeoCard(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         padding: const EdgeInsets.all(12),
         child: TableCalendar<IEEEEvent>(
           locale: 'en_US',
@@ -98,7 +99,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
             markerBuilder: (context, day, events) {
               if (events.isNotEmpty) {
                 // Use varying opacity based on event count for "intensity"
-                final double opacity = (events.length * 0.2 + 0.3).clamp(0.3, 1.0);
+                final double opacity =
+                    (events.length * 0.2 + 0.3).clamp(0.3, 1.0);
                 return Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
@@ -108,7 +110,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: AppColors.premiumBlue.withOpacity(opacity),
-                      border: Border.all(color: AppColors.premiumBlack, width: 0.5),
+                      border:
+                          Border.all(color: AppColors.premiumBlack, width: 0.5),
                     ),
                   ),
                 );
@@ -120,7 +123,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 child: Text(
                   '${day.day}',
                   style: TextStyle(
-                    color: AppColors.premiumNavy.withOpacity(0.2),
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.25),
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
                   ),
@@ -146,8 +149,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               fontWeight: FontWeight.w900,
               fontSize: 16,
             ),
-            selectedDecoration: const BoxDecoration(
-              color: AppColors.premiumBlack,
+            selectedDecoration: BoxDecoration(
+              color: theme.colorScheme.primary,
               shape: BoxShape.circle,
             ),
             selectedTextStyle: const TextStyle(
@@ -155,20 +158,20 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               fontWeight: FontWeight.w900,
               fontSize: 16,
             ),
-            defaultTextStyle: const TextStyle(
+            defaultTextStyle: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w700,
-              color: AppColors.premiumNavy,
+              color: theme.colorScheme.onSurface,
             ),
             weekendTextStyle: TextStyle(
-              color: Colors.red[900],
+              color: theme.colorScheme.error,
               fontSize: 15,
               fontWeight: FontWeight.w700,
             ),
             outsideDaysVisible: true,
             cellPadding: const EdgeInsets.all(2),
             tableBorder: TableBorder.all(
-              color: AppColors.premiumBlack.withOpacity(0.15),
+              color: theme.colorScheme.outlineVariant,
               width: 1.5,
             ),
           ),
@@ -176,30 +179,32 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
           headerStyle: HeaderStyle(
             formatButtonVisible: false,
             titleCentered: true,
-            titleTextStyle: const TextStyle(
+            titleTextStyle: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w900,
-              color: AppColors.premiumNavy,
+              color: theme.colorScheme.onSurface,
               letterSpacing: -0.5,
             ),
-            leftChevronIcon: const Icon(Icons.chevron_left_rounded, color: AppColors.premiumBlack, size: 28),
-            rightChevronIcon: const Icon(Icons.chevron_right_rounded, color: AppColors.premiumBlack, size: 28),
+            leftChevronIcon: Icon(Icons.chevron_left_rounded,
+                color: theme.colorScheme.onSurface, size: 28),
+            rightChevronIcon: Icon(Icons.chevron_right_rounded,
+                color: theme.colorScheme.onSurface, size: 28),
             headerMargin: const EdgeInsets.only(bottom: 12),
             decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: AppColors.premiumBlack.withOpacity(0.1), width: 1),
+                bottom: BorderSide(color: theme.dividerColor, width: 1),
               ),
             ),
           ),
 
           daysOfWeekStyle: DaysOfWeekStyle(
             weekdayStyle: TextStyle(
-              color: AppColors.premiumNavy,
+              color: theme.colorScheme.onSurface,
               fontWeight: FontWeight.w900,
               fontSize: 13,
             ),
             weekendStyle: TextStyle(
-              color: Colors.red,
+              color: theme.colorScheme.error,
               fontWeight: FontWeight.w900,
               fontSize: 13,
             ),

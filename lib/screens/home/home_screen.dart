@@ -17,8 +17,9 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Container(
-      color: AppColors.premiumBackground,
+      color: theme.scaffoldBackgroundColor,
       child: RefreshIndicator(
         onRefresh: () async {
           await Future.delayed(const Duration(seconds: 1));
@@ -37,17 +38,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       'Welcome back, Member',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.premiumNavy,
-                            letterSpacing: -1.2,
-                          ),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium?.copyWith(
+                                fontWeight: FontWeight.w900,
+                                color: theme.colorScheme.onSurface,
+                                letterSpacing: -1.2,
+                              ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Your technical journey continues here.',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            color: AppColors.premiumNavy.withValues(alpha: 0.6),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.7),
                             fontWeight: FontWeight.w500,
                           ),
                     ),
@@ -81,7 +84,6 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-
   Widget _buildMicroSkillCard(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -95,7 +97,8 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
                     color: AppColors.premiumBlue,
                     borderRadius: BorderRadius.circular(4),
@@ -148,7 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           value: 0.65,
                           minHeight: 10,
                           backgroundColor: Colors.white10,
-                          valueColor: AlwaysStoppedAnimation<Color>(AppColors.premiumBlue),
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              AppColors.premiumBlue),
                         ),
                       ),
                     ],
@@ -160,8 +164,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     final todaysSkill = MicroSkill(
                       id: '1',
                       title: 'Modern UI Patterns with Flutter',
-                      teaser: 'Master the architecture of premium responsive interfaces.',
-                      fullDescription: 'API First Design is an approach where the API specification is designed before any implementation begins.',
+                      teaser:
+                          'Master the architecture of premium responsive interfaces.',
+                      fullDescription:
+                          'API First Design is an approach where the API specification is designed before any implementation begins.',
                       category: 'Engineering',
                       useCases: ['Architecture', 'Design Systems'],
                       resources: [],
@@ -170,15 +176,20 @@ class _HomeScreenState extends State<HomeScreen> {
                       difficulty: 'advanced',
                       externalUrl: 'https://ieee.org',
                     );
-                    context.push('/micro-skill/${todaysSkill.id}', extra: todaysSkill);
+                    context.push('/micro-skill/${todaysSkill.id}',
+                        extra: todaysSkill);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     foregroundColor: AppColors.premiumNavy,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(4)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
                   ),
-                  child: const Text('CONTINUE', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 0.5)),
+                  child: const Text('CONTINUE',
+                      style: TextStyle(
+                          fontWeight: FontWeight.w900, letterSpacing: 0.5)),
                 ),
               ],
             ),
@@ -201,126 +212,148 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
           ),
           const SizedBox(height: 16),
-        NeoCard(
-          padding: EdgeInsets.zero,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    height: 200,
-                    width: double.infinity,
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage('https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    top: 16,
-                    right: 16,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: AppColors.premiumBlack, width: 2),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: AppColors.premiumBlack,
-                            offset: Offset(3, 3),
-                          ),
-                        ],
-                      ),
-                      child: Column(
-                        children: [
-                          Text(
-                            '24',
-                            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  color: AppColors.premiumBlue,
-                                  fontWeight: FontWeight.w900,
-                                ),
-                          ),
-                          Text(
-                            'FEB',
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 1.0,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: const EdgeInsets.all(24),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+          NeoCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Stack(
                   children: [
-                    Text(
-                      'IEEE Tech Nexus 2026',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.w900,
-                            color: AppColors.premiumNavy,
-                            letterSpacing: -0.5,
-                          ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Icon(Icons.location_on_rounded, size: 18, color: AppColors.premiumBlue),
-                        const SizedBox(width: 8),
-                        Text(
-                          'VESIT Campus • 09:00 AM',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.premiumNavy.withValues(alpha: 0.6),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 24),
-                    SizedBox(
+                    Container(
+                      height: 200,
                       width: double.infinity,
-                      child: ElevatedButton(
-                        onPressed: () {
-                          final featuredEvent = IEEEEvent(
-                            title: 'IEEE Tech Nexus 2026',
-                            description: 'Join us for the flagship technical symposium of IEEE VESIT.',
-                            date: DateTime(2026, 2, 24),
-                            startTime: const TimeOfDay(hour: 9, minute: 0),
-                            venue: 'VESIT Campus',
-                            type: EventType.conference,
-                            registrationLink: 'https://ieee.org',
-                            tags: ['Tech', 'Navy', 'Premium'],
-                            isFeatured: true,
-                          );
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
-                            builder: (context) => EventDetailsSheet(event: featuredEvent),
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.premiumBlack,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-                          padding: const EdgeInsets.symmetric(vertical: 16),
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(
+                              'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'),
+                          fit: BoxFit.cover,
                         ),
-                        child: const Text('VIEW DETAILS', style: TextStyle(fontWeight: FontWeight.w900, letterSpacing: 1.0)),
+                      ),
+                    ),
+                    Positioned(
+                      top: 16,
+                      right: 16,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 8),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(4),
+                          border: Border.all(
+                              color: AppColors.premiumBlack, width: 2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: AppColors.premiumBlack,
+                              offset: Offset(3, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          children: [
+                            Text(
+                              '24',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .headlineSmall
+                                  ?.copyWith(
+                                    color: AppColors.premiumBlue,
+                                    fontWeight: FontWeight.w900,
+                                  ),
+                            ),
+                            Text(
+                              'FEB',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 1.0,
+                                  ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
                 ),
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.all(24),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'IEEE Tech Nexus 2026',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.w900,
+                              color: Theme.of(context).colorScheme.onSurface,
+                              letterSpacing: -0.5,
+                            ),
+                      ),
+                      const SizedBox(height: 12),
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on_rounded,
+                              size: 18, color: AppColors.premiumBlue),
+                          const SizedBox(width: 8),
+                          Text(
+                            'VESIT Campus • 09:00 AM',
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.7),
+                                    ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 24),
+                      SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            final featuredEvent = IEEEEvent(
+                              title: 'IEEE Tech Nexus 2026',
+                              description:
+                                  'Join us for the flagship technical symposium of IEEE VESIT.',
+                              date: DateTime(2026, 2, 24),
+                              startTime: const TimeOfDay(hour: 9, minute: 0),
+                              venue: 'VESIT Campus',
+                              type: EventType.conference,
+                              registrationLink: 'https://ieee.org',
+                              tags: ['Tech', 'Navy', 'Premium'],
+                              isFeatured: true,
+                            );
+                            showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(24))),
+                              builder: (context) =>
+                                  EventDetailsSheet(event: featuredEvent),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.premiumBlack,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4)),
+                            padding: const EdgeInsets.symmetric(vertical: 16),
+                          ),
+                          child: const Text('VIEW DETAILS',
+                              style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.0)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
         ],
       ),
     );
@@ -339,13 +372,18 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Announcements',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w900,
-                      color: AppColors.premiumNavy,
+                      color: Theme.of(context).colorScheme.onSurface,
                       letterSpacing: -0.5,
                     ),
               ),
               TextButton(
                 onPressed: () {},
-                child: Text('VIEW ALL', style: const TextStyle(color: AppColors.premiumBlue, fontWeight: FontWeight.w900, fontSize: 12, letterSpacing: 1.0)),
+                child: const Text('VIEW ALL',
+                    style: TextStyle(
+                        color: AppColors.premiumBlue,
+                        fontWeight: FontWeight.w900,
+                        fontSize: 12,
+                        letterSpacing: 1.0)),
               ),
             ],
           ),
@@ -366,7 +404,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildAnnouncementItem(BuildContext context, String title, String date) {
+  Widget _buildAnnouncementItem(
+      BuildContext context, String title, String date) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Row(
@@ -377,17 +416,20 @@ class _HomeScreenState extends State<HomeScreen> {
               title,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     fontWeight: FontWeight.w900,
-                    color: AppColors.premiumNavy,
+                    color: Theme.of(context).colorScheme.onSurface,
                   ),
             ),
           ),
           Text(
             date.toUpperCase(),
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: AppColors.premiumNavy.withValues(alpha: 0.5),
-              fontWeight: FontWeight.w900,
-              letterSpacing: 0.5,
-            ),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.6),
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.5,
+                ),
           ),
         ],
       ),
@@ -409,13 +451,29 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 20),
           Row(
             children: [
-              Expanded(child: _buildQuickAccessBtn(context, Icons.people_outline_rounded, 'Members', Colors.blue, AppConstants.membersPath)),
+              Expanded(
+                  child: _buildQuickAccessBtn(
+                      context,
+                      Icons.people_outline_rounded,
+                      'Members',
+                      Colors.blue,
+                      AppConstants.membersPath)),
               const SizedBox(width: 12),
-              Expanded(child: _buildQuickAccessBtn(context, Icons.event_note_rounded, 'Calendar', Colors.orange, AppConstants.eventsPath)),
+              Expanded(
+                  child: _buildQuickAccessBtn(context, Icons.event_note_rounded,
+                      'Calendar', Colors.orange, AppConstants.eventsPath)),
               const SizedBox(width: 12),
-              Expanded(child: _buildQuickAccessBtn(context, Icons.menu_book_rounded, 'Magazine', Colors.teal, AppConstants.magazinePath)),
+              Expanded(
+                  child: _buildQuickAccessBtn(context, Icons.menu_book_rounded,
+                      'Magazine', Colors.teal, AppConstants.magazinePath)),
               const SizedBox(width: 12),
-              Expanded(child: _buildQuickAccessBtn(context, Icons.contact_support_outlined, 'Support', Colors.purple, AppConstants.aboutPath)),
+              Expanded(
+                  child: _buildQuickAccessBtn(
+                      context,
+                      Icons.contact_support_outlined,
+                      'Support',
+                      Colors.purple,
+                      AppConstants.aboutPath)),
             ],
           ),
         ],
@@ -423,10 +481,11 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget _buildQuickAccessBtn(BuildContext context, IconData icon, String label, Color color, String route) {
+  Widget _buildQuickAccessBtn(BuildContext context, IconData icon, String label,
+      Color color, String route) {
     return NeoCard(
       onTap: () => context.go(route),
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
       borderRadius: 12,
       showBorder: true,
@@ -439,7 +498,7 @@ class _HomeScreenState extends State<HomeScreen> {
             label.toUpperCase(),
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   fontWeight: FontWeight.w900,
-                  color: AppColors.premiumNavy,
+                  color: Theme.of(context).colorScheme.onSurface,
                   fontSize: 9,
                   letterSpacing: 0.5,
                 ),
@@ -453,7 +512,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: NeoCard(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -472,7 +531,10 @@ class _HomeScreenState extends State<HomeScreen> {
               textAlign: TextAlign.justify,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     height: 1.6,
-                    color: AppColors.premiumNavy.withOpacity(0.8),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.8),
                     fontWeight: FontWeight.w500,
                   ),
             ),
@@ -482,6 +544,3 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
-
-
-

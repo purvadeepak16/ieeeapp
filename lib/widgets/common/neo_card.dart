@@ -25,7 +25,9 @@ class NeoCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double radius = borderRadius ?? AppSpacing.radiusCustom;
-    
+    final ThemeData theme = Theme.of(context);
+    final bool isDark = theme.brightness == Brightness.dark;
+
     return Stack(
       children: [
         // The Shadow Layer
@@ -37,26 +39,30 @@ class NeoCard extends StatelessWidget {
             bottom: 0,
             child: Container(
               decoration: BoxDecoration(
-                color: AppColors.neoShadow,
+                color: isDark ? AppColors.neoShadowDark : AppColors.neoShadow,
                 borderRadius: BorderRadius.circular(radius),
               ),
             ),
           ),
-        
+
         // The Bordered Card Layer
         Container(
-          margin: showShadow 
-              ? const EdgeInsets.only(bottom: AppSpacing.neoShadowOffset, right: AppSpacing.neoShadowOffset)
+          margin: showShadow
+              ? const EdgeInsets.only(
+                  bottom: AppSpacing.neoShadowOffset,
+                  right: AppSpacing.neoShadowOffset)
               : EdgeInsets.zero,
           decoration: BoxDecoration(
-            color: backgroundColor ?? Colors.white,
+            color: backgroundColor ?? theme.colorScheme.surface,
             borderRadius: BorderRadius.circular(radius),
-            border: showBorder 
-              ? Border.all(
-                  color: AppColors.neoDarkBorder,
-                  width: AppSpacing.neoBorderWidth,
-                )
-              : null,
+            border: showBorder
+                ? Border.all(
+                    color: isDark
+                        ? theme.colorScheme.onSurface
+                        : AppColors.neoDarkBorder,
+                    width: AppSpacing.neoBorderWidth,
+                  )
+                : null,
           ),
           child: ClipRRect(
             borderRadius: BorderRadius.circular(radius),

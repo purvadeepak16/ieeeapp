@@ -16,8 +16,9 @@ class MemberDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -31,7 +32,8 @@ class MemberDetailScreen extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      border: Border.all(color: const Color(0xFF1A237E), width: 2),
+                      border: Border.all(
+                          color: theme.colorScheme.primary, width: 2),
                       borderRadius: BorderRadius.circular(6),
                     ),
                     child: Image.asset(
@@ -42,7 +44,7 @@ class MemberDetailScreen extends StatelessWidget {
                       errorBuilder: (context, error, stackTrace) {
                         return const Icon(
                           Icons.change_history,
-                          color: Color(0xFF1A237E),
+                          color: Colors.white,
                           size: 24,
                         );
                       },
@@ -63,11 +65,11 @@ class MemberDetailScreen extends StatelessWidget {
                       width: double.infinity,
                       padding: const EdgeInsets.fromLTRB(20, 70, 20, 25),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1A237E),
+                        color: theme.colorScheme.primary,
                         borderRadius: BorderRadius.circular(22),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.12),
+                            color: Colors.black.withValues(alpha: 0.12),
                             blurRadius: 14,
                             offset: const Offset(0, 6),
                           ),
@@ -88,11 +90,13 @@ class MemberDetailScreen extends StatelessWidget {
 
                           // Role badge
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14, vertical: 8),
                             decoration: BoxDecoration(
                               color: Colors.white.withOpacity(0.12),
                               borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.white.withOpacity(0.25)),
+                              border: Border.all(
+                                  color: Colors.white.withOpacity(0.25)),
                             ),
                             child: Text(
                               member.role.isEmpty ? 'Member' : member.role,
@@ -117,42 +121,41 @@ class MemberDetailScreen extends StatelessWidget {
                         child: ClipOval(
                           child: _hasImage
                               ? Image.asset(
-                            member.imagePath!,
-                            width: 110,
-                            height: 110,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) {
-                              // if image path wrong
-                              return Center(
-                                child: Text(
-                                  member.name.isNotEmpty
-                                      ? member.name[0].toUpperCase()
-                                      : '?',
-                                  style: const TextStyle(
-                                    fontSize: 34,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
+                                  member.imagePath!,
+                                  width: 110,
+                                  height: 110,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) {
+                                    // if image path wrong
+                                    return Center(
+                                      child: Text(
+                                        member.name.isNotEmpty
+                                            ? member.name[0].toUpperCase()
+                                            : '?',
+                                        style: const TextStyle(
+                                          fontSize: 34,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                )
+                              : Center(
+                                  child: Text(
+                                    member.name.isNotEmpty
+                                        ? member.name[0].toUpperCase()
+                                        : '?',
+                                    style: const TextStyle(
+                                      fontSize: 34,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              );
-                            },
-                          )
-                              : Center(
-                            child: Text(
-                              member.name.isNotEmpty
-                                  ? member.name[0].toUpperCase()
-                                  : '?',
-                              style: const TextStyle(
-                                fontSize: 34,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
                         ),
                       ),
                     ),
-
                   ],
                 ),
 
@@ -163,11 +166,11 @@ class MemberDetailScreen extends StatelessWidget {
                   width: double.infinity,
                   padding: const EdgeInsets.all(26),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF1A237E),
+                    color: theme.colorScheme.primary,
                     borderRadius: BorderRadius.circular(22),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.10),
+                        color: Colors.black.withValues(alpha: 0.10),
                         blurRadius: 10,
                         offset: const Offset(0, 4),
                       ),
@@ -190,10 +193,10 @@ class MemberDetailScreen extends StatelessWidget {
                 const SizedBox(height: 40),
 
                 // Contact Details
-                const Text(
+                Text(
                   'CONTACT DETAILS',
                   style: TextStyle(
-                    color: Color(0xFF1A237E),
+                    color: theme.colorScheme.primary,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     letterSpacing: 1,
@@ -208,8 +211,9 @@ class MemberDetailScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: _hasEmail ? () {} : null,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1A237E),
-                      disabledBackgroundColor: const Color(0xFF1A237E).withOpacity(0.35),
+                      backgroundColor: theme.colorScheme.primary,
+                      disabledBackgroundColor:
+                          theme.colorScheme.primary.withValues(alpha: 0.35),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -230,7 +234,7 @@ class MemberDetailScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () => Navigator.pop(context),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF1A237E),
+                      backgroundColor: theme.colorScheme.primary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(30),
                       ),

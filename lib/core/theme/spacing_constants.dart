@@ -18,4 +18,9 @@ class AppSpacing {
   // Neo-Brutalism specific
   static const double neoBorderWidth = 2.5;
   static const double neoShadowOffset = 4.0;
+
+  // Profile action card specifics
+  static const double profileActionCardVerticalMargin = 6.0;
+  static const double profileActionCardIconPadding = 10.0;
+  static const double profileActionCardIconBorderWidth = 1.4;
 }

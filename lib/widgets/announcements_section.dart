@@ -11,13 +11,15 @@ class AnnouncementsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final events = ref.watch(eventsProvider);
-    final upcomingEvents = events.take(3).toList(); // Show first 3 events as announcements
+    final upcomingEvents =
+        events.take(3).toList(); // Show first 3 events as announcements
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: NeoCard(
-        backgroundColor: Colors.white,
+        backgroundColor: theme.colorScheme.surface,
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,10 +30,10 @@ class AnnouncementsSection extends ConsumerWidget {
                 Text(
                   'ANNOUNCEMENTS',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.0,
-                    color: AppColors.premiumNavy,
-                  ),
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.0,
+                        color: theme.colorScheme.onSurface,
+                      ),
                 ),
                 TextButton(
                   onPressed: () {
@@ -58,10 +60,12 @@ class AnnouncementsSection extends ConsumerWidget {
                     leading: Container(
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: Colors.black, width: 1.5),
+                        border: Border.all(
+                            color: theme.colorScheme.onSurface, width: 1.5),
                       ),
                       child: CircleAvatar(
-                        backgroundColor: _getEventColor(event.type).withAlpha(51),
+                        backgroundColor:
+                            _getEventColor(event.type).withAlpha(51),
                         child: Icon(
                           _getEventIcon(event.type),
                           color: _getEventColor(event.type),
@@ -71,29 +75,31 @@ class AnnouncementsSection extends ConsumerWidget {
                     ),
                     title: Text(
                       event.title,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.w900,
-                        color: Color(0xFF1A1A1A),
+                        color: theme.colorScheme.onSurface,
                         fontSize: 14,
                       ),
                     ),
                     subtitle: Text(
                       event.formattedDate.toUpperCase(),
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w900,
-                        color: Colors.black54,
+                        color:
+                            theme.colorScheme.onSurface.withValues(alpha: 0.7),
                         letterSpacing: 0.5,
                       ),
                     ),
-                    trailing: const Icon(Icons.chevron_right_rounded, color: Colors.black),
+                    trailing: Icon(Icons.chevron_right_rounded,
+                        color: theme.colorScheme.onSurface),
                     onTap: () {
                       // Show event card details
                       _showEventCard(context, event);
                     },
                   ),
                   if (upcomingEvents.last != event)
-                    const Divider(height: 1, color: Colors.black12),
+                    Divider(height: 1, color: theme.dividerColor),
                 ],
               );
             }),
@@ -179,7 +185,7 @@ class EventDetailsSheet extends StatelessWidget {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Theme.of(context).colorScheme.outlineVariant,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -189,7 +195,8 @@ class EventDetailsSheet extends StatelessWidget {
 
                 // Event Type
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: event.typeColor.withAlpha(51),
                     borderRadius: BorderRadius.circular(20),
@@ -232,7 +239,10 @@ class EventDetailsSheet extends StatelessWidget {
                           'Date',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[600],
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                         Text(
@@ -258,7 +268,10 @@ class EventDetailsSheet extends StatelessWidget {
                           'Time',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[600],
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                         Text(
@@ -291,7 +304,10 @@ class EventDetailsSheet extends StatelessWidget {
                           'Venue',
                           style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey[600],
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                         Text(
@@ -397,10 +413,10 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
   @override
   void initState() {
     super.initState();
-    
+
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.white)
+      ..setBackgroundColor(Theme.of(context).colorScheme.surface)
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
@@ -463,15 +479,14 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
               ],
             ),
           ),
-
           if (isLoading)
             LinearProgressIndicator(
               value: progress / 100,
-              backgroundColor: Colors.grey[200],
+              backgroundColor:
+                  Theme.of(context).colorScheme.surfaceContainerHighest,
               color: Theme.of(context).colorScheme.primary,
               minHeight: 2,
             ),
-
           Expanded(
             child: WebViewWidget(controller: controller),
           ),

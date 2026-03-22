@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:ieee_app/core/theme/app_colors.dart';
 import 'package:ieee_app/widgets/bottom_navbar.dart';
 import 'package:ieee_app/widgets/app_drawer.dart';
 
@@ -18,7 +17,7 @@ class AppScaffold extends StatelessWidget {
     final String location = GoRouterState.of(context).uri.toString();
 
     return Scaffold(
-      backgroundColor: AppColors.lightBackground,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.menu_rounded, size: 24),
@@ -49,5 +48,4 @@ class AppScaffold extends StatelessWidget {
       bottomNavigationBar: BottomNavBar(location: location),
     );
   }
-
 }

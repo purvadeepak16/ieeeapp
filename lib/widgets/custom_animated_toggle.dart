@@ -18,32 +18,41 @@ class CustomAnimatedToggle extends StatelessWidget {
       onTap: () => onChanged(!value),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
-        width: 50,
-        height: 28,
+        curve: Curves.easeOutCubic,
+        width: 52,
+        height: 30,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
-          color: value ? activeColor : Colors.grey.withOpacity(0.3),
+          borderRadius: BorderRadius.circular(15),
+          color: value ? activeColor : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.2),
+          boxShadow: value
+              ? [
+                  BoxShadow(
+                    color: activeColor.withValues(alpha: 0.35),
+                    blurRadius: 10,
+                    offset: const Offset(0, 4),
+                  )
+                ]
+              : null,
         ),
         child: AnimatedAlign(
           duration: const Duration(milliseconds: 300),
-          curve: Curves.easeInOut,
+          curve: Curves.easeOutBack,
           alignment: value ? Alignment.centerRight : Alignment.centerLeft,
           child: Padding(
-            padding: const EdgeInsets.all(2.0),
+            padding: const EdgeInsets.symmetric(horizontal: 2.0),
             child: Container(
-              width: 24,
-              height: 24,
-              decoration: const BoxDecoration(
+              width: 26,
+              height: 26,
+              decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.white,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 4,
-                    offset: Offset(0, 2),
+                    color: Colors.black.withValues(alpha: 0.15),
+                    blurRadius: 6,
+                    offset: const Offset(0, 2),
                   )
-                ]
+                ],
               ),
             ),
           ),

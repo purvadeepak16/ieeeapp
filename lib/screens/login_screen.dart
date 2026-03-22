@@ -9,8 +9,9 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 22),
@@ -25,7 +26,7 @@ class LoginScreen extends StatelessWidget {
                   height: 40,
                   width: 40,
                   decoration: BoxDecoration(
-                    color: const Color(0xFF0A2A66),
+                    color: theme.colorScheme.primary,
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: IconButton(
@@ -60,19 +61,19 @@ class LoginScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 14),
-              const Text(
+              Text(
                 'Login to your account',
                 style: TextStyle(
                   fontSize: 14,
-                  color: Color(0xFF5B6B8C),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
 
               const SizedBox(height: 30),
 
-              _shadowInput(Icons.person, 'Username'),
+              _shadowInput(context, Icons.person, 'Username'),
               const SizedBox(height: 16),
-              _shadowInput(Icons.lock, 'Password', obscure: true),
+              _shadowInput(context, Icons.lock, 'Password', obscure: true),
 
               const SizedBox(height: 10),
 
@@ -82,7 +83,7 @@ class LoginScreen extends StatelessWidget {
                   'Forgot password?',
                   style: TextStyle(
                     fontSize: 13,
-                    color: Colors.grey.shade600,
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ),
@@ -93,19 +94,19 @@ class LoginScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              const Text(
+              Text(
                 '— Or Login with Google —',
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: Color(0xFF5B6B8C),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
                 ),
               ),
 
               const SizedBox(height: 22),
 
               Center(
-                child: _socialIcon('google_logo.png'),
+                child: _socialIcon(context, 'google_logo.png'),
               ),
 
               const SizedBox(height: 30),
@@ -119,12 +120,12 @@ class LoginScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () => context.go('/register'),
-                    child: const Text(
+                    child: Text(
                       'Sign Up',
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w700,
-                        color: Color(0xFF0A2A66),
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                   ),
@@ -142,18 +143,21 @@ class LoginScreen extends StatelessWidget {
   // ================= INPUT WITH SHADOW =================
 
   Widget _shadowInput(
-      IconData icon,
-      String hint, {
-        bool obscure = false,
-      }) {
+    BuildContext context,
+    IconData icon,
+    String hint, {
+    bool obscure = false,
+  }) {
+    final theme = Theme.of(context);
     return Container(
       height: fieldHeight,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withValues(
+                alpha: theme.brightness == Brightness.dark ? 0.25 : 0.08),
             blurRadius: 8,
             offset: const Offset(0, 3),
           ),
@@ -163,34 +167,34 @@ class LoginScreen extends StatelessWidget {
         obscureText: obscure,
         decoration: InputDecoration(
           filled: true,
-          fillColor: Colors.white,
+          fillColor: theme.colorScheme.surface,
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Color(0xFFD1D5DB),
+            borderSide: BorderSide(
+              color: theme.dividerColor,
               width: 1,
             ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Color(0xFF0A2A66),
+            borderSide: BorderSide(
+              color: theme.colorScheme.primary,
               width: 1.2,
             ),
           ),
           hintText: hint,
-          hintStyle: const TextStyle(
+          hintStyle: TextStyle(
             fontSize: 14,
-            color: Color(0xFF9AA3AF),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
           ),
           isDense: true,
           contentPadding: const EdgeInsets.symmetric(vertical: 13),
           prefixIcon: Container(
             width: fieldHeight,
             alignment: Alignment.center,
-            decoration: const BoxDecoration(
-              color: Color(0xFF0A2A66),
-              borderRadius: BorderRadius.horizontal(
+            decoration: BoxDecoration(
+              color: theme.colorScheme.primary,
+              borderRadius: const BorderRadius.horizontal(
                 left: Radius.circular(10),
               ),
             ),
@@ -209,7 +213,7 @@ class LoginScreen extends StatelessWidget {
       height: 52,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFF0A2A66),
+          backgroundColor: Theme.of(context).colorScheme.primary,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
@@ -225,16 +229,18 @@ class LoginScreen extends StatelessWidget {
 
   // ================= GOOGLE ICON =================
 
-  Widget _socialIcon(String asset) {
+  Widget _socialIcon(BuildContext context, String asset) {
+    final theme = Theme.of(context);
     return Container(
       height: 56,
       width: 56,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: theme.colorScheme.surface,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.10),
+            color: Colors.black.withValues(
+                alpha: theme.brightness == Brightness.dark ? 0.3 : 0.10),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
