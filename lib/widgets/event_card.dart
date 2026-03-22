@@ -68,7 +68,7 @@ class EventCard extends ConsumerWidget {
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w900,
                         height: 1.1,
-                        color: AppColors.premiumNavy,
+                        color: Theme.of(context).colorScheme.onSurface,
                         fontSize: compact ? 18 : 22,
                       ),
                   maxLines: 2,
@@ -85,7 +85,8 @@ class EventCard extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: AppColors.blueTint,
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: AppColors.premiumBlack, width: 1.5),
+                        border: Border.all(
+                            color: AppColors.premiumBlack, width: 1.5),
                       ),
                       child: const Icon(
                         Icons.calendar_today_rounded,
@@ -99,7 +100,10 @@ class EventCard extends ConsumerWidget {
                         event.formattedDate,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w900,
-                              color: AppColors.premiumBlack.withOpacity(0.8),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.8),
                               fontSize: 10,
                             ),
                         overflow: TextOverflow.ellipsis,
@@ -112,7 +116,8 @@ class EventCard extends ConsumerWidget {
                       decoration: BoxDecoration(
                         color: AppColors.orangeTint,
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: AppColors.premiumBlack, width: 1.5),
+                        border: Border.all(
+                            color: AppColors.premiumBlack, width: 1.5),
                       ),
                       child: const Icon(
                         Icons.access_time_rounded,
@@ -126,7 +131,10 @@ class EventCard extends ConsumerWidget {
                         event.formattedTime,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w900,
-                              color: AppColors.premiumBlack.withOpacity(0.8),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.8),
                               fontSize: 10,
                             ),
                         overflow: TextOverflow.ellipsis,
@@ -144,7 +152,7 @@ class EventCard extends ConsumerWidget {
                     const Icon(
                       Icons.location_on_rounded,
                       size: 14,
-                      color: AppColors.premiumBlack,
+                      color: AppColors.premiumBlue,
                     ),
                     const SizedBox(width: 6),
                     Expanded(
@@ -152,7 +160,10 @@ class EventCard extends ConsumerWidget {
                         event.venue,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                               fontWeight: FontWeight.w800,
-                              color: AppColors.premiumBlack.withOpacity(0.6),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withValues(alpha: 0.7),
                             ),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
@@ -169,7 +180,10 @@ class EventCard extends ConsumerWidget {
                     event.description,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           height: 1.5,
-                          color: AppColors.premiumBlack.withOpacity(0.7),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.8),
                           fontWeight: FontWeight.w500,
                         ),
                     maxLines: 3,
@@ -183,9 +197,9 @@ class EventCard extends ConsumerWidget {
                     onPressed: () => _openRegistrationForm(context),
                     isExpanded: true,
                     backgroundColor: AppColors.premiumBlue,
-                    child: Row(
+                    child: const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
+                      children: [
                         Icon(Icons.assignment_rounded, size: 18),
                         SizedBox(width: 8),
                         Text('REGISTER NOW'),
@@ -241,10 +255,10 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
   @override
   void initState() {
     super.initState();
-    
+
     // Platform-specific setup
     late final PlatformWebViewControllerCreationParams params;
-    
+
     if (WebViewPlatform.instance is WebKitWebViewPlatform) {
       params = WebKitWebViewControllerCreationParams(
         allowsInlineMediaPlayback: true,
@@ -256,7 +270,7 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
 
     controller = WebViewController.fromPlatformCreationParams(params)
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setBackgroundColor(Colors.white)
+      ..setBackgroundColor(Theme.of(context).colorScheme.surface)
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
@@ -324,28 +338,23 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
               ],
             ),
           ),
-
           if (isLoading)
             LinearProgressIndicator(
               value: progress / 100,
-              backgroundColor: Colors.grey[200],
+              backgroundColor:
+                  Theme.of(context).colorScheme.surfaceContainerHighest,
               color: Theme.of(context).colorScheme.primary,
               minHeight: 2,
             ),
-
           Expanded(
             child: WebViewWidget(
               controller: controller,
               gestureRecognizers: <Factory<OneSequenceGestureRecognizer>>{
                 Factory<VerticalDragGestureRecognizer>(
-                  () => VerticalDragGestureRecognizer()
-                ),
+                    () => VerticalDragGestureRecognizer()),
                 Factory<HorizontalDragGestureRecognizer>(
-                  () => HorizontalDragGestureRecognizer()
-                ),
-                Factory<ScaleGestureRecognizer>(
-                  () => ScaleGestureRecognizer()
-                ),
+                    () => HorizontalDragGestureRecognizer()),
+                Factory<ScaleGestureRecognizer>(() => ScaleGestureRecognizer()),
               },
             ),
           ),
@@ -384,7 +393,7 @@ class EventDetailsSheet extends StatelessWidget {
                     width: 40,
                     height: 4,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: Theme.of(context).colorScheme.outlineVariant,
                       borderRadius: BorderRadius.circular(2),
                     ),
                   ),
@@ -394,7 +403,8 @@ class EventDetailsSheet extends StatelessWidget {
 
                 // Event Type
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: event.typeColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(20),
@@ -415,7 +425,7 @@ class EventDetailsSheet extends StatelessWidget {
                   event.title,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.w900,
-                        color: AppColors.premiumNavy,
+                        color: Theme.of(context).colorScheme.onSurface,
                       ),
                 ),
 
@@ -442,16 +452,18 @@ class EventDetailsSheet extends StatelessWidget {
                       children: [
                         Text(
                           'DATE',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: AppColors.premiumBlue,
-                                fontWeight: FontWeight.w900,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: AppColors.premiumBlue,
+                                    fontWeight: FontWeight.w900,
+                                  ),
                         ),
                         Text(
                           event.formattedDate,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.w800,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w800,
+                                  ),
                         ),
                       ],
                     ),
@@ -474,16 +486,18 @@ class EventDetailsSheet extends StatelessWidget {
                       children: [
                         Text(
                           'TIME',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: Colors.orange,
-                                fontWeight: FontWeight.w900,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: Colors.orange,
+                                    fontWeight: FontWeight.w900,
+                                  ),
                         ),
                         Text(
                           event.formattedTime,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.w800,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w800,
+                                  ),
                         ),
                       ],
                     ),
@@ -513,16 +527,21 @@ class EventDetailsSheet extends StatelessWidget {
                       children: [
                         Text(
                           'VENUE',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: AppColors.premiumNavy.withOpacity(0.6),
-                                fontWeight: FontWeight.w900,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.7),
+                                    fontWeight: FontWeight.w900,
+                                  ),
                         ),
                         Text(
                           event.venue,
-                          style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                fontWeight: FontWeight.w800,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                    fontWeight: FontWeight.w800,
+                                  ),
                         ),
                       ],
                     ),
@@ -566,7 +585,9 @@ class EventDetailsSheet extends StatelessWidget {
                     children: event.tags.map((tag) {
                       return Chip(
                         label: Text('#$tag'),
-                        backgroundColor: Colors.grey[100],
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .surfaceContainerHighest,
                         labelStyle: const TextStyle(fontSize: 12),
                       );
                     }).toList(),
@@ -595,11 +616,12 @@ class EventDetailsSheet extends StatelessWidget {
                         const SizedBox(width: 12),
                         Text(
                           'OPEN REGISTRATION FORM',
-                          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: 2.0,
-                              ),
+                          style:
+                              Theme.of(context).textTheme.labelSmall?.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: 2.0,
+                                  ),
                         ),
                       ],
                     ),

@@ -20,6 +20,7 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final events = ref.watch(eventsProvider);
     final selectedDate = ref.watch(selectedDateProvider);
 
@@ -61,7 +62,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                   ),
                   const SizedBox(height: 16),
                   SizedBox(
-                    height: 220, // Increased for better shadow visibility and breathing room
+                    height:
+                        220, // Increased for better shadow visibility and breathing room
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       itemCount: featuredEvents.length,
@@ -101,20 +103,24 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                           Icon(
                             Icons.calendar_today,
                             size: 16,
-                            color: _selectedView == 0 ? Colors.white : AppColors.premiumBlack,
+                            color: _selectedView == 0
+                                ? theme.colorScheme.onPrimary
+                                : theme.colorScheme.onSurface,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             'Calendar',
                             style: TextStyle(
-                              color: _selectedView == 0 ? Colors.white : AppColors.premiumBlack,
+                              color: _selectedView == 0
+                                  ? theme.colorScheme.onPrimary
+                                  : theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                         ],
                       ),
                       selected: _selectedView == 0,
-                      selectedColor: AppColors.premiumBlack,
+                      selectedColor: theme.colorScheme.primary,
                       backgroundColor: Colors.transparent,
                       onSelected: (selected) =>
                           setState(() => _selectedView = 0),
@@ -129,20 +135,24 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                           Icon(
                             Icons.list,
                             size: 16,
-                            color: _selectedView == 1 ? Colors.white : AppColors.premiumBlack,
+                            color: _selectedView == 1
+                                ? theme.colorScheme.onPrimary
+                                : theme.colorScheme.onSurface,
                           ),
                           const SizedBox(width: 4),
                           Text(
                             'List',
                             style: TextStyle(
-                              color: _selectedView == 1 ? Colors.white : AppColors.premiumBlack,
+                              color: _selectedView == 1
+                                  ? theme.colorScheme.onPrimary
+                                  : theme.colorScheme.onSurface,
                               fontWeight: FontWeight.w900,
                             ),
                           ),
                         ],
                       ),
                       selected: _selectedView == 1,
-                      selectedColor: AppColors.premiumBlack,
+                      selectedColor: theme.colorScheme.primary,
                       backgroundColor: Colors.transparent,
                       onSelected: (selected) =>
                           setState(() => _selectedView = 1),
@@ -175,7 +185,8 @@ class _EventsScreenState extends ConsumerState<EventsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Events on ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'.toUpperCase(),
+                    'Events on ${selectedDate.day}/${selectedDate.month}/${selectedDate.year}'
+                        .toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           fontWeight: FontWeight.w900,
                           color: AppColors.premiumBlue,

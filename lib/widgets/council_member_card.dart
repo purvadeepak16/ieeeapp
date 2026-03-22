@@ -17,7 +17,7 @@ class CouncilMemberCard extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: NeoCard(
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         padding: const EdgeInsets.all(16),
         onTap: onTap,
         child: Row(
@@ -25,17 +25,22 @@ class CouncilMemberCard extends StatelessWidget {
             Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.black, width: 2),
+                border: Border.all(
+                    color: Theme.of(context).colorScheme.onSurface, width: 2),
               ),
               child: CircleAvatar(
                 radius: 30,
                 backgroundColor: member.color,
-                backgroundImage: (member.imagePath != null && member.imagePath!.trim().isNotEmpty)
+                backgroundImage: (member.imagePath != null &&
+                        member.imagePath!.trim().isNotEmpty)
                     ? AssetImage(member.imagePath!)
                     : null,
-                child: (member.imagePath == null || member.imagePath!.trim().isEmpty)
+                child: (member.imagePath == null ||
+                        member.imagePath!.trim().isEmpty)
                     ? Text(
-                        member.name.isNotEmpty ? member.name[0].toUpperCase() : '?',
+                        member.name.isNotEmpty
+                            ? member.name[0].toUpperCase()
+                            : '?',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w900,
@@ -52,8 +57,8 @@ class CouncilMemberCard extends StatelessWidget {
                 children: [
                   Text(
                     member.name,
-                    style: const TextStyle(
-                      color: Color(0xFF1A1A1A),
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.onSurface,
                       fontSize: 18,
                       fontWeight: FontWeight.w900,
                       letterSpacing: -0.5,
@@ -61,7 +66,8 @@ class CouncilMemberCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                     decoration: BoxDecoration(
                       color: member.color.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(4),

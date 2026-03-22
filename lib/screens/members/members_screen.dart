@@ -7,8 +7,6 @@ import 'package:ieee_app/screens/members/member_detail_screen.dart';
 class MembersScreen extends StatelessWidget {
   const MembersScreen({super.key});
 
-
-
   void _openMember(BuildContext context, CouncilMember member) {
     Navigator.push(
       context,
@@ -18,18 +16,17 @@ class MembersScreen extends StatelessWidget {
     );
   }
 
-
-  Widget _sectionTitle(String title) {
+  Widget _sectionTitle(BuildContext context, String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 16),
       child: Center(
         child: Text(
           title,
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF1A237E),
+            color: Theme.of(context).colorScheme.primary,
             letterSpacing: 1,
           ),
         ),
@@ -42,20 +39,20 @@ class MembersScreen extends StatelessWidget {
       children: [
         for (final m in members) ...[
           const Divider(height: 1, indent: 16, endIndent: 16),
-            CouncilMemberCard(
+          CouncilMemberCard(
             member: m,
             onTap: () => _openMember(context, m),
-            ),
+          ),
         ],
       ],
     );
   }
 
   Widget _expandableSection(
-      BuildContext context, {
-        required String title,
-        required List<CouncilMember> members,
-      }) {
+    BuildContext context, {
+    required String title,
+    required List<CouncilMember> members,
+  }) {
     return Theme(
       data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
       child: ExpansionTile(
@@ -64,16 +61,16 @@ class MembersScreen extends StatelessWidget {
         title: Center(
           child: Text(
             title,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF1A237E),
+              color: Theme.of(context).colorScheme.primary,
               letterSpacing: 1,
             ),
           ),
         ),
-        iconColor: const Color(0xFF1A237E),
-        collapsedIconColor: const Color(0xFF1A237E),
+        iconColor: Theme.of(context).colorScheme.primary,
+        collapsedIconColor: Theme.of(context).colorScheme.primary,
         children: [
           _memberList(context, members),
         ],
@@ -89,39 +86,30 @@ class MembersScreen extends StatelessWidget {
     const se = CouncilMembersData.seCouncil;
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Column(
           children: [
-
-
             Expanded(
               child: ListView(
                 children: [
-                  _sectionTitle('Branch Counsellors'),
+                  _sectionTitle(context, 'Branch Counsellors'),
                   _memberList(context, branch),
-
                   const Divider(height: 1, indent: 16, endIndent: 16),
-                  _sectionTitle('Senior Council'),
+                  _sectionTitle(context, 'Senior Council'),
                   _memberList(context, senior),
-
                   const Divider(height: 1, indent: 16, endIndent: 16),
                   _expandableSection(context,
                       title: 'Junior Council', members: junior),
-
                   const Divider(height: 1, indent: 16, endIndent: 16),
                   _expandableSection(context, title: 'SE Council', members: se),
-
                   const SizedBox(height: 20),
                 ],
               ),
             ),
-
-
           ],
         ),
       ),
     );
   }
 }
-

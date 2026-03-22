@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:ieee_app/screens/settings/edit_profile_page.dart';
@@ -18,12 +19,32 @@ class SettingsPage extends ConsumerStatefulWidget {
   ConsumerState<SettingsPage> createState() => _SettingsPageState();
 }
 
-class _SettingsPageState extends ConsumerState<SettingsPage> {
+class _SettingsPageState extends ConsumerState<SettingsPage> with TickerProviderStateMixin {
   bool notificationsOn = true;
   String selectedLanguage = 'English (UK)';
 
   File? _avatarImage;
   final ImagePicker _picker = ImagePicker();
+
+  late AnimationController _glowController;
+  late AnimationController _floatController;
+  late AnimationController _editBadgeController;
+
+  @override
+  void initState() {
+    super.initState();
+    _glowController = AnimationController(vsync: this, duration: const Duration(seconds: 4))..repeat();
+    _floatController = AnimationController(vsync: this, duration: const Duration(seconds: 3))..repeat(reverse: true);
+    _editBadgeController = AnimationController(vsync: this, duration: const Duration(milliseconds: 200));
+  }
+
+  @override
+  void dispose() {
+    _glowController.dispose();
+    _floatController.dispose();
+    _editBadgeController.dispose();
+    super.dispose();
+  }
 
   // ===== COLOR SYSTEM =====
   bool get isDarkMode {
@@ -38,12 +59,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   Color get cardColor => isDarkMode ? AppColors.profileCardDark : AppColors.profileCardLight;
   Color get textColor => isDarkMode ? AppColors.profileTextDark : AppColors.profileTextLight;
   Color get subTextColor => isDarkMode ? AppColors.profileSubtextDark : AppColors.profileSubtextLight;
-  Color get dividerColor => isDarkMode ? AppColors.profileDividerDark : AppColors.profileDividerLight;
   Color get accentBlue => AppColors.profileAccent;
 
   Future<void> _pickAvatar() async {
-    final XFile? image =
-    await _picker.pickImage(source: ImageSource.gallery);
+    _editBadgeController.forward().then((_) => _editBadgeController.reverse());
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
 
     if (image != null) {
       setState(() {
@@ -57,6 +77,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     return Scaffold(
       backgroundColor: bgColor,
       body: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
             // ===== HEADER =====
@@ -72,101 +93,120 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               },
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 400),
-                padding: const EdgeInsets.symmetric(vertical: 32),
+                padding: const EdgeInsets.only(top: 48, bottom: 32),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Stack(
-                      children: [
-                        GestureDetector(
-                          onTap: _pickAvatar,
-                          child: TweenAnimationBuilder<double>(
-                            tween: Tween(begin: 0.8, end: 1.0),
-                            duration: const Duration(milliseconds: 800),
-                            curve: Curves.elasticOut,
-                            builder: (context, value, child) {
-                              return Transform.scale(
-                                scale: value,
-                                child: Container(
+                    GestureDetector(
+                      onTap: _pickAvatar,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          AnimatedBuilder(
+                            animation: _floatController,
+                            builder: (context, child) {
+                              return Transform.translate(
+                                offset: Offset(0, -6 * _floatController.value),
+                                child: child,
+                              );
+                            },
+                            child: AnimatedBuilder(
+                              animation: _glowController,
+                              builder: (context, child) {
+                                return Container(
+                                  width: 144,
+                                  height: 144,
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
+                                    gradient: SweepGradient(
+                                      transform: GradientRotation(_glowController.value * 2 * math.pi),
+                                      colors: [
+                                        accentBlue,
+                                        const Color(0xFF8B5CF6),
+                                        const Color(0xFFEC4899),
+                                        accentBlue,
+                                      ],
+                                    ),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: accentBlue.withOpacity(0.3 * value),
-                                        blurRadius: 20 * value,
-                                        spreadRadius: 2 * value,
+                                        color: accentBlue.withOpacity(0.4),
+                                        blurRadius: 24,
+                                        spreadRadius: 2,
                                       ),
                                     ],
                                   ),
+                                  padding: const EdgeInsets.all(4),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: bgColor,
+                                    ),
+                                    padding: const EdgeInsets.all(4),
+                                    child: CircleAvatar(
+                                      radius: 64,
+                                      backgroundColor: Colors.transparent,
+                                      backgroundImage: _avatarImage != null
+                                          ? FileImage(_avatarImage!)
+                                          : const AssetImage('assets/images/avatar.png')
+                                              as ImageProvider,
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          AnimatedBuilder(
+                            animation: _floatController,
+                            builder: (context, child) {
+                              return Positioned(
+                                bottom: 6 - (6 * _floatController.value),
+                                right: 6,
+                                child: ScaleTransition(
+                                  scale: Tween<double>(begin: 1.0, end: 0.9).animate(_editBadgeController),
                                   child: child,
                                 ),
                               );
                             },
-                            child: CircleAvatar(
-                              radius: 72,
-                              backgroundColor: Colors.transparent, // Changed to transparent
-                              child: CircleAvatar(
-                                radius: 68,
-                                backgroundImage: _avatarImage != null
-                                    ? FileImage(_avatarImage!)
-                                    : const AssetImage('assets/images/avatar.png')
-                                        as ImageProvider,
+                            child: Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [accentBlue, const Color(0xFF8B5CF6)],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                shape: BoxShape.circle,
+                                border: Border.all(color: bgColor, width: 3),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: accentBlue.withOpacity(0.5),
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 4),
+                                  ),
+                                ],
+                              ),
+                              child: const Icon(
+                                Icons.edit_rounded,
+                                size: 18,
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                        ),
-                        Positioned(
-                          bottom: 6,
-                          right: 6,
-                          child: GestureDetector(
-                            onTap: _pickAvatar,
-                            child: TweenAnimationBuilder<double>(
-                              tween: Tween(begin: 0.0, end: 1.0),
-                              duration: const Duration(milliseconds: 400),
-                              curve: Curves.easeOutBack,
-                              builder: (context, value, child) {
-                                return Transform.scale(
-                                  scale: value,
-                                  child: child,
-                                );
-                              },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.all(8),
-                                decoration: BoxDecoration(
-                                  color: accentBlue,
-                                  shape: BoxShape.circle,
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.4),
-                                      blurRadius: 6,
-                                    ),
-                                  ],
-                                border: Border.all(color: Colors.white, width: 2),
-                                ),
-                                child: const Icon(
-                                  Icons.edit,
-                                  size: 16,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 20),
                     Text(
-                      'USER',
+                      'Aarya Kulkarni',
                       style: TextStyle(
                           color: textColor,
                           fontWeight: FontWeight.w800,
-                          fontSize: 20,
-                          letterSpacing: 0.5),
+                          fontSize: 22,
+                          letterSpacing: -0.5),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(height: 6),
                     Text(
-                      'youremail@domain.com | +91 XXXXXXXX',
+                      'aarya.k@ves.ac.in | +91 9876543210',
                       style: TextStyle(color: subTextColor, fontSize: 13, fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -174,7 +214,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
             ),
 
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
             // ===== MAIN SETTINGS LIST =====
             TweenAnimationBuilder<double>(
@@ -199,9 +239,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       'Account Settings',
                       style: TextStyle(
                         color: subTextColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
                         letterSpacing: 1.2,
+                        textBaseline: TextBaseline.alphabetic,
                       ),
                     ),
                   ),
@@ -221,10 +262,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     icon: Icons.notifications_none_rounded,
                     title: 'Notifications',
                     subtitle: 'Configure app alerts',
+                    accentColor: const Color(0xFFF59E0B),
                     isDarkMode: isDarkMode,
                     trailing: CustomAnimatedToggle(
                       value: notificationsOn,
-                      activeColor: accentBlue,
+                      activeColor: const Color(0xFFF59E0B),
                       onChanged: (v) {
                         setState(() => notificationsOn = v);
                       },
@@ -245,6 +287,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     icon: Icons.translate_rounded,
                     title: 'Language',
                     subtitle: selectedLanguage,
+                    accentColor: const Color(0xFF10B981),
                     isDarkMode: isDarkMode,
                     onTap: () async {
                       final result = await Navigator.push(
@@ -263,8 +306,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                       'Preferences',
                       style: TextStyle(
                         color: subTextColor,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
                         letterSpacing: 1.2,
                       ),
                     ),
@@ -273,51 +316,40 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                     icon: Icons.palette_outlined,
                     title: 'Theme',
                     subtitle: isDarkMode ? 'Dark Mode' : 'Light Mode',
+                    accentColor: const Color(0xFF8B5CF6),
                     isDarkMode: isDarkMode,
-                    trailing: DropdownButton<bool>(
+                    trailing: CustomAnimatedToggle(
                       value: isDarkMode,
-                      underline: const SizedBox(),
-                      dropdownColor: cardColor,
-                      icon: Icon(Icons.arrow_drop_down_rounded, color: subTextColor),
-                      items: [
-                        DropdownMenuItem(
-                          value: false, 
-                          child: Text('Light', style: TextStyle(color: textColor, fontSize: 14))
-                        ),
-                        DropdownMenuItem(
-                          value: true, 
-                          child: Text('Dark', style: TextStyle(color: textColor, fontSize: 14))
-                        ),
-                      ],
+                      activeColor: const Color(0xFF8B5CF6),
                       onChanged: (v) {
-                        if (v != null) {
                           ref.read(themeProvider.notifier).toggleTheme(v);
-                        }
                       },
                     ),
-                    onTap: () {},
+                    onTap: () {
+                      ref.read(themeProvider.notifier).toggleTheme(!isDarkMode);
+                    },
                   ),
-                  const SizedBox(height: 48),
+                  const SizedBox(height: 40),
                   Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: TextButton.icon(
                       style: TextButton.styleFrom(
-                        foregroundColor: Colors.redAccent,
-                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        foregroundColor: AppColors.error,
+                        padding: const EdgeInsets.symmetric(vertical: 18),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                        backgroundColor: isDarkMode ? Colors.redAccent.withOpacity(0.05) : Colors.red.shade50,
+                        backgroundColor: AppColors.error.withOpacity(0.1),
                       ),
                       onPressed: () {},
-                      icon: const Icon(Icons.logout_rounded),
+                      icon: const Icon(Icons.logout_rounded, size: 22),
                       label: const Center(
                         child: Text(
                           'Log Out', 
                           style: TextStyle(
                             fontSize: 16, 
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.5,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: -0.2,
                           )
                         )
                       ),
