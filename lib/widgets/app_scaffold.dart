@@ -19,11 +19,13 @@ class AppScaffold extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu_rounded, size: 24),
-          onPressed: () {
-            Scaffold.of(context).openDrawer();
-          },
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu_rounded, size: 24),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
         ),
         title: Text(
           'IEEE VESIT',
