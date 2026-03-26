@@ -8,38 +8,38 @@ class AppTypography {
   static const String fontFamily = 'Inter';
 
   static TextTheme get lightTextTheme => GoogleFonts.interTextTheme().copyWith(
-        displaySmall: TextStyle(
+        displaySmall: const TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.w900,
           height: 1.1,
           letterSpacing: -1.5,
           color: AppColors.premiumNavy,
         ),
-        headlineLarge: TextStyle(
+        headlineLarge: const TextStyle(
           fontSize: 32,
           fontWeight: FontWeight.w900,
           letterSpacing: -1.2,
           color: AppColors.premiumNavy,
         ),
-        headlineMedium: TextStyle(
+        headlineMedium: const TextStyle(
           fontSize: 26,
           fontWeight: FontWeight.w900,
           letterSpacing: -0.8,
           color: AppColors.premiumNavy,
         ),
-        headlineSmall: TextStyle(
+        headlineSmall: const TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w900,
           letterSpacing: -0.5,
           color: AppColors.premiumNavy,
         ),
-        titleLarge: TextStyle(
+        titleLarge: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.w900,
           letterSpacing: -0.2,
           color: AppColors.premiumNavy,
         ),
-        titleMedium: TextStyle(
+        titleMedium: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w800,
           color: AppColors.premiumNavy,
@@ -108,4 +108,3 @@ class AppTypography {
         ),
       );
 }
-

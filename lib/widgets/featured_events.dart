@@ -12,7 +12,8 @@ class FeaturedEvents extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final events = ref.watch(eventsProvider);
-    final featuredEvents = events.where((event) => event.isFeatured).take(3).toList();
+    final featuredEvents =
+        events.where((event) => event.isFeatured).take(3).toList();
 
     if (featuredEvents.isEmpty) {
       return const SizedBox();
@@ -29,8 +30,8 @@ class FeaturedEvents extends ConsumerWidget {
               Text(
                 'Featured Events',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               TextButton(
                 onPressed: () {
@@ -43,7 +44,8 @@ class FeaturedEvents extends ConsumerWidget {
           ),
         ),
         SizedBox(
-          height: 240, // Increased to account for NeoCard shadow and prevent vertical overflow
+          height:
+              240, // Increased to account for NeoCard shadow and prevent vertical overflow
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -60,7 +62,7 @@ class FeaturedEvents extends ConsumerWidget {
                   child: NeoCard(
                     backgroundColor: Theme.of(context).colorScheme.surface,
                     padding: EdgeInsets.zero,
-                    child: Container(
+                    child: SizedBox(
                       width: 280,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +73,8 @@ class FeaturedEvents extends ConsumerWidget {
                             decoration: BoxDecoration(
                               color: _getEventColor(event.type),
                               border: const Border(
-                                bottom: BorderSide(color: Colors.black, width: 2),
+                                bottom:
+                                    BorderSide(color: Colors.black, width: 2),
                               ),
                             ),
                             child: Stack(
@@ -91,7 +94,8 @@ class FeaturedEvents extends ConsumerWidget {
                                 Padding(
                                   padding: const EdgeInsets.all(12),
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       Text(
@@ -111,7 +115,7 @@ class FeaturedEvents extends ConsumerWidget {
                               ],
                             ),
                           ),
-                          
+
                           // Event Details
                           Padding(
                             padding: const EdgeInsets.all(12),
@@ -120,7 +124,8 @@ class FeaturedEvents extends ConsumerWidget {
                               children: [
                                 Row(
                                   children: [
-                                    const Icon(Icons.calendar_today, size: 12, color: Colors.black54),
+                                    const Icon(Icons.calendar_today,
+                                        size: 12, color: Colors.black54),
                                     const SizedBox(width: 4),
                                     Expanded(
                                       child: Text(
@@ -140,7 +145,8 @@ class FeaturedEvents extends ConsumerWidget {
                                 SizedBox(
                                   width: double.infinity,
                                   child: ElevatedButton(
-                                    onPressed: () => _openRegistrationLink(event.registrationLink, context),
+                                    onPressed: () => _openRegistrationLink(
+                                        event.registrationLink, context),
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.black,
                                       foregroundColor: Colors.white,
@@ -148,11 +154,15 @@ class FeaturedEvents extends ConsumerWidget {
                                         borderRadius: BorderRadius.circular(4),
                                       ),
                                       elevation: 0,
-                                      padding: const EdgeInsets.symmetric(vertical: 8),
+                                      padding: const EdgeInsets.symmetric(
+                                          vertical: 8),
                                     ),
                                     child: const Text(
                                       'REGISTER NOW',
-                                      style: TextStyle(fontWeight: FontWeight.w900, fontSize: 10, letterSpacing: 0.5),
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w900,
+                                          fontSize: 10,
+                                          letterSpacing: 0.5),
                                     ),
                                   ),
                                 ),
@@ -253,7 +263,8 @@ class EventDetailsSheet extends StatelessWidget {
 
                 // Event Type
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: event.typeColor.withAlpha(51),
                     borderRadius: BorderRadius.circular(20),
@@ -461,7 +472,7 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
   @override
   void initState() {
     super.initState();
-    
+
     controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(Colors.white)
@@ -527,7 +538,6 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
               ],
             ),
           ),
-
           if (isLoading)
             LinearProgressIndicator(
               value: progress / 100,
@@ -535,7 +545,6 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
               color: Theme.of(context).colorScheme.primary,
               minHeight: 2,
             ),
-
           Expanded(
             child: WebViewWidget(controller: controller),
           ),

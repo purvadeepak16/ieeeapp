@@ -28,7 +28,7 @@ class NeoButton extends StatelessWidget {
     final Color bg = backgroundColor ?? AppColors.premiumBlack;
     final Color fg = foregroundColor ?? Colors.white;
 
-    Widget buttonContent = Stack(
+    final Widget buttonContent = Stack(
       children: [
         // Hard Shadow
         Positioned(
@@ -57,7 +57,8 @@ class NeoButton extends StatelessWidget {
               onTap: onPressed,
               borderRadius: BorderRadius.circular(radius),
               child: Padding(
-                padding: padding ?? const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+                padding: padding ??
+                    const EdgeInsets.symmetric(vertical: 12, horizontal: 24),
                 child: Center(
                   widthFactor: isExpanded ? null : 1.0,
                   child: DefaultTextStyle(

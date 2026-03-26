@@ -63,17 +63,15 @@ class _AnimatedActionCardState extends State<AnimatedActionCard>
         : AppColors.profileSubtextLight;
 
     // Neo-brutalism border: dark in both modes, just a bit lighter in dark mode
-    final borderColor = widget.isDarkMode
-        ? const Color(0xFF4A5260)
-        : AppColors.neoDarkBorder;
+    final borderColor =
+        widget.isDarkMode ? const Color(0xFF4A5260) : AppColors.neoDarkBorder;
 
     // Neo shadow color: hard solid color, no blur
-    final neoShadowColor = widget.isDarkMode
-        ? AppColors.neoShadowDark
-        : AppColors.neoShadow;
+    final neoShadowColor =
+        widget.isDarkMode ? AppColors.neoShadowDark : AppColors.neoShadow;
 
     // Shadow offset: 0 when pressed, larger when hovered
-    final double baseOffset = AppSpacing.neoShadowOffset;
+    const double baseOffset = AppSpacing.neoShadowOffset;
 
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
@@ -91,7 +89,8 @@ class _AnimatedActionCardState extends State<AnimatedActionCard>
             // When pressed: card translates down-right into its shadow
             final pressOffset = _pressAnimation.value * baseOffset;
             // When hovered (and not pressed): extra lift via larger shadow
-            final hoverLift = _isHovered && _controller.value == 0.0 ? 2.0 : 0.0;
+            final hoverLift =
+                _isHovered && _controller.value == 0.0 ? 2.0 : 0.0;
             final shadowOffset = baseOffset + hoverLift - pressOffset;
 
             return Padding(
@@ -108,14 +107,17 @@ class _AnimatedActionCardState extends State<AnimatedActionCard>
                     right: -(shadowOffset),
                     bottom: -(shadowOffset),
                     child: Container(
-                      margin: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.md,
                         vertical: AppSpacing.profileActionCardVerticalMargin,
                       ),
                       decoration: BoxDecoration(
                         color: neoShadowColor,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusProfileCard),
-                        border: Border.all(color: borderColor, width: AppSpacing.neoBorderWidth),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusProfileCard),
+                        border: Border.all(
+                            color: borderColor,
+                            width: AppSpacing.neoBorderWidth),
                       ),
                     ),
                   ),
@@ -124,17 +126,21 @@ class _AnimatedActionCardState extends State<AnimatedActionCard>
                   Transform.translate(
                     offset: Offset(pressOffset, pressOffset),
                     child: Container(
-                      margin: EdgeInsets.symmetric(
+                      margin: const EdgeInsets.symmetric(
                         horizontal: AppSpacing.md,
                         vertical: AppSpacing.profileActionCardVerticalMargin,
                       ),
                       decoration: BoxDecoration(
                         color: cardColor,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusProfileCard),
-                        border: Border.all(color: borderColor, width: AppSpacing.neoBorderWidth),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusProfileCard),
+                        border: Border.all(
+                            color: borderColor,
+                            width: AppSpacing.neoBorderWidth),
                       ),
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusProfileCard - 2),
+                        borderRadius: BorderRadius.circular(
+                            AppSpacing.radiusProfileCard - 2),
                         child: Padding(
                           padding: const EdgeInsets.all(AppSpacing.md),
                           child: Row(
@@ -142,18 +148,21 @@ class _AnimatedActionCardState extends State<AnimatedActionCard>
                               // Icon badge
                               AnimatedContainer(
                                 duration: const Duration(milliseconds: 200),
-                                padding: const EdgeInsets.all(AppSpacing.md * 0.75),
+                                padding:
+                                    const EdgeInsets.all(AppSpacing.md * 0.75),
                                 decoration: BoxDecoration(
                                   color: widget.accentColor.withValues(
                                     alpha: _isHovered ? 0.18 : 0.10,
                                   ),
                                   borderRadius: BorderRadius.circular(14),
                                   border: Border.all(
-                                    color: widget.accentColor.withValues(alpha: 0.25),
+                                    color: widget.accentColor
+                                        .withValues(alpha: 0.25),
                                     width: 1.5,
                                   ),
                                 ),
-                                child: Icon(widget.icon, color: widget.accentColor, size: 22),
+                                child: Icon(widget.icon,
+                                    color: widget.accentColor, size: 22),
                               ),
                               const SizedBox(width: AppSpacing.md),
                               // Text
