@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ieee_app/widgets/wie_widgets/wie_body.dart';
-import 'package:ieee_app/widgets/app_drawer.dart';
 
 class WiePage extends StatelessWidget {
   const WiePage({super.key});
@@ -11,6 +10,6 @@ class WiePage extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
       body: const WieBody(),
-    ); 
+    );
   }
 }

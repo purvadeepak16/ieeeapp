@@ -7,8 +7,10 @@ class MicroSkillsWidget extends StatelessWidget {
   final MicroSkill todaysSkill = MicroSkill(
     id: '1',
     title: 'API First Design',
-    teaser: 'Build scalable systems by designing the API before implementation. Widely used in microservices.',
-    fullDescription: 'API First Design is an approach where the API specification is designed before any implementation begins. This ensures consistency, better developer experience, and easier integration between different services.',
+    teaser:
+        'Build scalable systems by designing the API before implementation. Widely used in microservices.',
+    fullDescription:
+        'API First Design is an approach where the API specification is designed before any implementation begins. This ensures consistency, better developer experience, and easier integration between different services.',
     category: 'Software Architecture',
     useCases: [
       'Microservices Communication',
@@ -20,7 +22,8 @@ class MicroSkillsWidget extends StatelessWidget {
       Resource(
         type: 'article',
         title: 'API First Design Principles',
-        url: 'https://swagger.io/resources/articles/adopting-an-api-first-approach/',
+        url:
+            'https://swagger.io/resources/articles/adopting-an-api-first-approach/',
         description: 'Learn the core principles of API First Design',
       ),
       Resource(
@@ -78,15 +81,16 @@ class MicroSkillsWidget extends StatelessWidget {
                     Text(
                       'DAILY MICRO-SKILL',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1.0,
-                        color: Colors.black,
-                      ),
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.0,
+                            color: Colors.black,
+                          ),
                     ),
                   ],
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.green.withAlpha(51),
                     borderRadius: BorderRadius.circular(4),
@@ -107,22 +111,21 @@ class MicroSkillsWidget extends StatelessWidget {
             Text(
               todaysSkill.title,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.w900,
-                color: Colors.black,
-                letterSpacing: -0.5,
-              ),
+                    fontWeight: FontWeight.w900,
+                    color: Colors.black,
+                    letterSpacing: -0.5,
+                  ),
             ),
             const SizedBox(height: 12),
             Text(
               todaysSkill.teaser,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.black87,
-                height: 1.5,
-                fontWeight: FontWeight.w500,
-              ),
+                    color: Colors.black87,
+                    height: 1.5,
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
             const SizedBox(height: 24),
-            
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -131,11 +134,15 @@ class MicroSkillsWidget extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).colorScheme.primary.withAlpha(51),
+                        color:
+                            Theme.of(context).colorScheme.primary.withAlpha(51),
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Theme.of(context).colorScheme.primary, width: 1),
+                        border: Border.all(
+                            color: Theme.of(context).colorScheme.primary,
+                            width: 1),
                       ),
                       child: Text(
                         todaysSkill.category.toUpperCase(),
@@ -147,16 +154,21 @@ class MicroSkillsWidget extends StatelessWidget {
                       ),
                     ),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
                       decoration: BoxDecoration(
                         color: _getDifficultyColor(todaysSkill.difficulty),
                         borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: _getDifficultyTextColor(todaysSkill.difficulty), width: 1),
+                        border: Border.all(
+                            color:
+                                _getDifficultyTextColor(todaysSkill.difficulty),
+                            width: 1),
                       ),
                       child: Text(
                         todaysSkill.difficulty.toUpperCase(),
                         style: TextStyle(
-                          color: _getDifficultyTextColor(todaysSkill.difficulty),
+                          color:
+                              _getDifficultyTextColor(todaysSkill.difficulty),
                           fontWeight: FontWeight.w900,
                           fontSize: 10,
                         ),
@@ -193,7 +205,6 @@ class MicroSkillsWidget extends StatelessWidget {
                 ),
               ],
             ),
-            
             const SizedBox(height: 16),
             Container(
               height: 8,
@@ -212,16 +223,22 @@ class MicroSkillsWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 8),
-            Row(
+            const Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
+                Text(
                   'DAY 3 OF 30',
-                  style: TextStyle(fontSize: 10, color: Colors.black54, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w900),
                 ),
-                const Text(
+                Text(
                   '30% COMPLETE',
-                  style: TextStyle(fontSize: 10, color: Colors.black54, fontWeight: FontWeight.w900),
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.black54,
+                      fontWeight: FontWeight.w900),
                 ),
               ],
             ),
@@ -233,10 +250,14 @@ class MicroSkillsWidget extends StatelessWidget {
 
   Color _getDifficultyTextColor(String difficulty) {
     switch (difficulty.toLowerCase()) {
-      case 'beginner': return Colors.green;
-      case 'intermediate': return Colors.orange;
-      case 'advanced': return Colors.red;
-      default: return Colors.grey;
+      case 'beginner':
+        return Colors.green;
+      case 'intermediate':
+        return Colors.orange;
+      case 'advanced':
+        return Colors.red;
+      default:
+        return Colors.grey;
     }
   }
 

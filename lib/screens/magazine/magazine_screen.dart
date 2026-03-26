@@ -1,10 +1,30 @@
 import 'package:flutter/material.dart';
 import 'package:ieee_app/widgets/common/neo_card.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MagazineScreen extends StatelessWidget {
   const MagazineScreen({super.key});
 
   static const accentBlue = Color(0xFF1F6BFF);
+
+  // Magazine data for three consecutive years
+  static final List<MagazineData> magazines = [
+    MagazineData(
+      year: 2024,
+      driveLink:
+          'https://drive.google.com/file/d/14mnQqGuPa0hvi9m7xzME9yyhpJCunRci/view?usp=sharing',
+    ),
+    MagazineData(
+      year: 2023,
+      driveLink:
+          'https://drive.google.com/file/d/14mnQqGuPa0hvi9m7xzME9yyhpJCunRci/view?usp=sharing',
+    ),
+    MagazineData(
+      year: 2022,
+      driveLink:
+          'https://drive.google.com/file/d/14mnQqGuPa0hvi9m7xzME9yyhpJCunRci/view?usp=sharing',
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -27,33 +47,33 @@ class MagazineScreen extends StatelessWidget {
                   letterSpacing: 1.0,
                 ),
               ),
-              const SizedBox(height: 24),
-              const Row(
-                children: [
-                  Expanded(
-                    child: _CategoryButton(
-                      icon: Icons.menu_book_rounded,
-                      label: 'MAGAZINES',
-                      isActive: true,
-                    ),
+              const SizedBox(height: 32),
+              Text(
+                'MAGAZINES',
+                style: theme.textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.w900,
+                  color: theme.colorScheme.onSurface,
+                  letterSpacing: 0.5,
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                child: GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    childAspectRatio: 0.95,
+                    crossAxisSpacing: 12,
+                    mainAxisSpacing: 12,
                   ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: _CategoryButton(
-                      icon: Icons.description_rounded,
-                      label: 'PAPERS',
-                      isActive: false,
-                    ),
-                  ),
-                  SizedBox(width: 12),
-                  Expanded(
-                    child: _CategoryButton(
-                      icon: Icons.star_rounded,
-                      label: 'STARRED',
-                      isActive: false,
-                    ),
-                  ),
-                ],
+                  itemCount: magazines.length,
+                  itemBuilder: (context, index) {
+                    return _MagazineCard(
+                      magazineData: magazines[index],
+                    );
+                  },
+                ),
               ),
               const SizedBox(height: 40),
               Text(
@@ -338,4 +358,107 @@ class _PaperTile extends StatelessWidget {
       ),
     );
   }
+}
+
+/* ================== MAGAZINE CARD ================== */
+
+class _MagazineCard extends StatelessWidget {
+  final MagazineData magazineData;
+
+  const _MagazineCard({
+    required this.magazineData,
+  });
+
+  static const accentBlue = Color(0xFF1F6BFF);
+
+  Future<void> _openDriveLink(BuildContext context) async {
+    final Uri url = Uri.parse(magazineData.driveLink);
+    try {
+      if (await canLaunchUrl(url)) {
+        await launchUrl(
+          url,
+          mode: LaunchMode.externalApplication,
+        );
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Could not open magazine link'),
+              duration: Duration(seconds: 2),
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: $e'),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _openDriveLink(context),
+      child: NeoCard(
+        backgroundColor: Colors.transparent,
+        padding: EdgeInsets.zero,
+        borderRadius: 12,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.menu_book_rounded,
+                size: 32,
+                color: accentBlue,
+              ),
+              const SizedBox(height: 12),
+              Text(
+                '${magazineData.year}',
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                'MAGAZINE',
+                style: TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 10,
+                  letterSpacing: 0.5,
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
+                ),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/* ================== MAGAZINE DATA MODEL ================== */
+
+class MagazineData {
+  final int year;
+  final String driveLink;
+
+  MagazineData({
+    required this.year,
+    required this.driveLink,
+  });
 }
