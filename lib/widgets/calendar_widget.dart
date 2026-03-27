@@ -150,8 +150,15 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               fontSize: 16,
             ),
             selectedDecoration: BoxDecoration(
-              color: theme.colorScheme.primary,
+              color: AppColors.premiumBlue,
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: AppColors.premiumBlue.withValues(alpha: 0.4),
+                  blurRadius: 8,
+                  spreadRadius: 2,
+                ),
+              ],
             ),
             selectedTextStyle: const TextStyle(
               color: Colors.white,
@@ -159,6 +166,22 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               fontSize: 16,
             ),
             defaultTextStyle: TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: theme.colorScheme.onSurface,
+            ),
+            rangeHighlightColor: theme.colorScheme.primary.withValues(alpha: 0.3),
+            rangeEndTextStyle: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+            rangeStartTextStyle: const TextStyle(
+              fontSize: 15,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
+            ),
+            withinRangeTextStyle: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w700,
               color: theme.colorScheme.onSurface,

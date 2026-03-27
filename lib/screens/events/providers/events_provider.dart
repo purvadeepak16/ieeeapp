@@ -26,6 +26,7 @@ final _demoEvents = [
     venue: 'B51, VESIT',
     type: EventType.workshop,
     tags: ['machinelearning', 'ai', 'datascience'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Machine Minds 2.0',
@@ -37,6 +38,7 @@ final _demoEvents = [
     venue: 'B51, VESIT',
     type: EventType.workshop,
     tags: ['machinelearning', 'ai', 'datascience'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Capture The Flag Competition',
@@ -59,6 +61,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     tags: ['cybersecurity', 'ctf', 'workshop'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Capture The Flag Workshop',
@@ -70,6 +73,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     tags: ['cybersecurity', 'ctf', 'workshop'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Arcane Hackathon',
@@ -103,6 +107,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     tags: ['api', 'backend', 'integration'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'ApiCalypse',
@@ -114,6 +119,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     tags: ['api', 'backend', 'integration'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'TPP Workshop',
@@ -125,6 +131,7 @@ final _demoEvents = [
     venue: 'B21, VESIT',
     type: EventType.workshop,
     tags: ['presentation', 'research', 'technical'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'TPP Workshop',
@@ -136,6 +143,7 @@ final _demoEvents = [
     venue: 'B41, VESIT',
     type: EventType.workshop,
     tags: ['presentation', 'research', 'technical'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'UI/UX Workshop',
@@ -147,6 +155,7 @@ final _demoEvents = [
     venue: 'B21, VESIT',
     type: EventType.workshop,
     tags: ['design', 'uiux', 'creativity'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'UI/UX Workshop',
@@ -158,6 +167,7 @@ final _demoEvents = [
     venue: 'B21, VESIT',
     type: EventType.workshop,
     tags: ['design', 'uiux', 'creativity'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Build.PCB',
@@ -193,6 +203,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     tags: ['mongodb', 'database', 'nosql'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Mongo.INIT()',
@@ -204,6 +215,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     tags: ['mongodb', 'database', 'nosql'],
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
 ];
 

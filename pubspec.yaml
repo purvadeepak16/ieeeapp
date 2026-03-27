@@ -30,6 +30,7 @@ dependencies:
   share_plus: ^7.2.1
   ionicons: ^0.2.2
   url_launcher: ^6.3.2
+  http: ^1.1.0
 
 
 dev_dependencies:

@@ -15,6 +15,7 @@ class IEEEEvent {
   final String? imageUrl;
   final bool isFeatured;
   final String? registrationLink;
+  final String? resourceLink;
   final List<String> tags;
 
   IEEEEvent({
@@ -29,6 +30,7 @@ class IEEEEvent {
     this.imageUrl,
     this.isFeatured = false,
     this.registrationLink,
+    this.resourceLink,
     this.tags = const [],
   }) : id = id ?? const Uuid().v4();
 
