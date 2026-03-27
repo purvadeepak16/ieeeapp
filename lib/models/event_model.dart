@@ -14,7 +14,7 @@ class IEEEEvent {
   final EventType type;
   final String? imageUrl;
   final bool isFeatured;
-  final String registrationLink; // ADDED: Google Form link
+  final String? registrationLink;
   final List<String> tags;
 
   IEEEEvent({
@@ -28,7 +28,7 @@ class IEEEEvent {
     required this.type,
     this.imageUrl,
     this.isFeatured = false,
-    required this.registrationLink, // REQUIRED now
+    this.registrationLink,
     this.tags = const [],
   }) : id = id ?? const Uuid().v4();
 

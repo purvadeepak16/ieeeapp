@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ieee_app/models/event_model.dart';
 import 'package:ieee_app/screens/events/providers/events_provider.dart';
-import 'package:ieee_app/screens/home/registration_webview_screen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:ieee_app/widgets/common/neo_card.dart';
 
@@ -141,31 +140,6 @@ class FeaturedEvents extends ConsumerWidget {
                                     ),
                                   ],
                                 ),
-                                const SizedBox(height: 12),
-                                SizedBox(
-                                  width: double.infinity,
-                                  child: ElevatedButton(
-                                    onPressed: () => _openRegistrationLink(
-                                        event.registrationLink, context),
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.black,
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(4),
-                                      ),
-                                      elevation: 0,
-                                      padding: const EdgeInsets.symmetric(
-                                          vertical: 8),
-                                    ),
-                                    child: const Text(
-                                      'REGISTER NOW',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w900,
-                                          fontSize: 10,
-                                          letterSpacing: 0.5),
-                                    ),
-                                  ),
-                                ),
                               ],
                             ),
                           ),
@@ -197,18 +171,6 @@ class FeaturedEvents extends ConsumerWidget {
       default:
         return Colors.blue;
     }
-  }
-
-  void _openRegistrationLink(String url, BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => RegistrationWebViewScreen(
-          url: url,
-          title: 'Event Registration',
-        ),
-      ),
-    );
   }
 
   void _showEventCard(BuildContext context, IEEEEvent event) {
@@ -402,54 +364,11 @@ class EventDetailsSheet extends StatelessWidget {
                 ),
 
                 const SizedBox(height: 32),
-
-                // Register Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => _openRegistrationForm(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                    ),
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.assignment, size: 20),
-                        SizedBox(width: 10),
-                        Text(
-                          'Open Registration Form',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 32),
               ],
             ),
           ),
         );
       },
-    );
-  }
-
-  void _openRegistrationForm(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => RegistrationWebView(url: event.registrationLink),
     );
   }
 }

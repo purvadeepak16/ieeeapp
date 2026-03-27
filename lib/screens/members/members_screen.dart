@@ -2,19 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ieee_app/data/council_members_data.dart';
 import 'package:ieee_app/models/council_member_model.dart';
 import 'package:ieee_app/widgets/council_member_card.dart';
-import 'package:ieee_app/screens/members/member_detail_screen.dart';
 
 class MembersScreen extends StatelessWidget {
   const MembersScreen({super.key});
-
-  void _openMember(BuildContext context, CouncilMember member) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MemberDetailScreen(member: member),
-      ),
-    );
-  }
 
   Widget _sectionTitle(BuildContext context, String title) {
     return Padding(
@@ -41,7 +31,6 @@ class MembersScreen extends StatelessWidget {
           const Divider(height: 1, indent: 16, endIndent: 16),
           CouncilMemberCard(
             member: m,
-            onTap: () => _openMember(context, m),
           ),
         ],
       ],
