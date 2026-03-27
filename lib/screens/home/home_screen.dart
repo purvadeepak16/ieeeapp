@@ -5,9 +5,9 @@ import 'package:ieee_app/core/auth/auth_provider.dart';
 import 'package:ieee_app/core/constants/app_constants.dart';
 import 'package:ieee_app/core/theme/app_colors.dart';
 import 'package:ieee_app/models/event_model.dart';
-import 'package:ieee_app/models/micro_skill_model.dart';
 import 'package:ieee_app/widgets/common/neo_card.dart';
 import 'package:ieee_app/widgets/event_card.dart';
+import 'package:ieee_app/widgets/micro_skills_widget.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -87,118 +87,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Widget _buildMicroSkillCard(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: NeoCard(
-        backgroundColor: AppColors.premiumNavy,
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.premiumBlue,
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    'SPOTLIGHT',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.5,
-                        ),
-                  ),
-                ),
-                Text(
-                  'LVL 04',
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: Colors.white54,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
-            Text(
-              'Modern UI Patterns with Flutter',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: Colors.white,
-                    letterSpacing: -0.5,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Master the architecture of premium responsive interfaces.',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    height: 1.5,
-                  ),
-            ),
-            const SizedBox(height: 28),
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: const LinearProgressIndicator(
-                          value: 0.65,
-                          minHeight: 10,
-                          backgroundColor: Colors.white10,
-                          valueColor: AlwaysStoppedAnimation<Color>(
-                              AppColors.premiumBlue),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    final todaysSkill = MicroSkill(
-                      id: '1',
-                      title: 'Modern UI Patterns with Flutter',
-                      teaser:
-                          'Master the architecture of premium responsive interfaces.',
-                      fullDescription:
-                          'API First Design is an approach where the API specification is designed before any implementation begins.',
-                      category: 'Engineering',
-                      useCases: ['Architecture', 'Design Systems'],
-                      resources: [],
-                      icon: '⚡',
-                      date: DateTime.now(),
-                      difficulty: 'advanced',
-                      externalUrl: 'https://ieee.org',
-                    );
-                    context.push('/micro-skill/${todaysSkill.id}',
-                        extra: todaysSkill);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: AppColors.premiumNavy,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4)),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                  ),
-                  child: const Text('CONTINUE',
-                      style: TextStyle(
-                          fontWeight: FontWeight.w900, letterSpacing: 0.5)),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+    return const MicroSkillsWidget();
   }
 
   Widget _buildFeaturedEvent(BuildContext context) {
