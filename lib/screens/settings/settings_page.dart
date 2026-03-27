@@ -8,9 +8,13 @@ import 'package:ieee_app/screens/settings/notification_page.dart';
 import 'package:ieee_app/core/theme/app_colors.dart';
 import 'package:ieee_app/widgets/animated_action_card.dart';
 import 'package:ieee_app/widgets/custom_animated_toggle.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ieee_app/core/providers/theme_provider.dart';
+import 'package:ieee_app/core/auth/auth_provider.dart';
+import 'package:ieee_app/core/auth/auth_controller.dart';
+import 'package:ieee_app/core/constants/app_constants.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -44,6 +48,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> with TickerProvider
     _floatController.dispose();
     _editBadgeController.dispose();
     super.dispose();
+  }
+
+  String _getUserName() {
+    final user = ref.read(authRepositoryProvider).currentUser;
+    final displayName = user?.displayName?.trim();
+    if (displayName != null && displayName.isNotEmpty) {
+      return displayName;
+    }
+    return 'User';
+  }
+
+  String _getUserEmail() {
+    final user = ref.read(authRepositoryProvider).currentUser;
+    return user?.email ?? 'No email';
   }
 
   // ===== COLOR SYSTEM =====
@@ -197,7 +215,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> with TickerProvider
                     ),
                     const SizedBox(height: 20),
                     Text(
-                      'Aarya Kulkarni',
+                      _getUserName(),
                       style: TextStyle(
                           color: textColor,
                           fontWeight: FontWeight.w800,
@@ -206,7 +224,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> with TickerProvider
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      'aarya.k@ves.ac.in | +91 9876543210',
+                      _getUserEmail(),
                       style: TextStyle(color: subTextColor, fontSize: 13, fontWeight: FontWeight.w500),
                     ),
                   ],
@@ -341,7 +359,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> with TickerProvider
                         ),
                         backgroundColor: AppColors.error.withOpacity(0.1),
                       ),
-                      onPressed: () {},
+                      onPressed: () async {
+                        try {
+                          await ref.read(authControllerProvider.notifier).signOut();
+                          if (!context.mounted) return;
+                          context.go(AppConstants.loginPath);
+                        } catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Logout failed: $e')),
+                          );
+                        }
+                      },
                       icon: const Icon(Icons.logout_rounded, size: 22),
                       label: const Center(
                         child: Text(
