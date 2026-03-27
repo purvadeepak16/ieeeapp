@@ -8,8 +8,7 @@ import 'package:webview_flutter_wkwebview/webview_flutter_wkwebview.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/foundation.dart';
 import 'package:ieee_app/core/theme/app_colors.dart';
-
-import 'package:ieee_app/widgets/common/neo_button.dart';
+import 'package:ieee_app/core/services/calendar_service.dart';
 
 class EventCard extends ConsumerWidget {
   final IEEEEvent event;
@@ -192,37 +191,12 @@ class EventCard extends ConsumerWidget {
 
                   const SizedBox(height: 24),
 
-                  // Register Button
-                  NeoButton(
-                    onPressed: () => _openRegistrationForm(context),
-                    isExpanded: true,
-                    backgroundColor: AppColors.premiumBlue,
-                    child: const Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.assignment_rounded, size: 18),
-                        SizedBox(width: 8),
-                        Text('REGISTER NOW'),
-                      ],
-                    ),
-                  ),
                 ],
               ],
             ),
           ),
         ],
       ),
-    );
-  }
-
-  void _openRegistrationForm(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => RegistrationWebView(url: event.registrationLink),
     );
   }
 
@@ -364,13 +338,99 @@ class _RegistrationWebViewState extends State<RegistrationWebView> {
   }
 }
 
-class EventDetailsSheet extends StatelessWidget {
+class EventDetailsSheet extends ConsumerStatefulWidget {
   final IEEEEvent event;
 
   const EventDetailsSheet({
     super.key,
     required this.event,
   });
+
+  @override
+  ConsumerState<EventDetailsSheet> createState() => _EventDetailsSheetState();
+}
+
+class _EventDetailsSheetState extends ConsumerState<EventDetailsSheet> {
+  bool _isAddingToCalendar = false;
+
+  void _addToGoogleCalendar() async {
+    setState(() {
+      _isAddingToCalendar = true;
+    });
+
+    try {
+      // Parse the formatted time (e.g., "2:30 PM" or "2:30 PM - 3:30 PM")
+      final timeParts = widget.event.formattedTime.split(' - ');
+      final startTimePart = timeParts[0].trim();
+      
+      // Parse start time (e.g., "2:30 PM")
+      final startTimeComponents = startTimePart.split(' ');
+      final startTimeStr = startTimeComponents[0]; // "2:30"
+      final period = startTimeComponents[1]; // "PM" or "AM"
+      
+      final timeValues = startTimeStr.split(':');
+      var hour = int.parse(timeValues[0]);
+      final minute = int.parse(timeValues[1]);
+
+      // Convert to 24-hour format
+      final isPM = period == 'PM';
+      if (isPM && hour != 12) {
+        hour += 12;
+      } else if (!isPM && hour == 12) {
+        hour = 0;
+      }
+
+      // Format start time as HH:MM
+      final startTime = '${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+      
+      // Calculate end time (add 2 hours)
+      final endHour = (hour + 2) % 24;
+      final endTime = '${endHour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}';
+
+      // Call calendar service
+      await CalendarService.addToGoogle(
+        title: widget.event.title,
+        date: widget.event.date,
+        startTime: startTime,
+        endTime: endTime,
+        venue: widget.event.venue,
+        description: widget.event.description,
+      );
+
+      if (mounted) {
+        // Show success message and give time for URL to open
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Opening Google Calendar...'),
+            duration: Duration(seconds: 3),
+          ),
+        );
+        
+        // Delay before closing to ensure URL opens
+        await Future.delayed(const Duration(milliseconds: 500));
+        
+        if (mounted) {
+          Navigator.pop(context);
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${e.toString()}'),
+            duration: const Duration(seconds: 4),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isAddingToCalendar = false;
+        });
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -406,13 +466,13 @@ class EventDetailsSheet extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: event.typeColor.withOpacity(0.1),
+                    color: widget.event.typeColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
-                    event.typeLabel,
+                    widget.event.typeLabel,
                     style: TextStyle(
-                      color: event.typeColor,
+                      color: widget.event.typeColor,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -422,7 +482,7 @@ class EventDetailsSheet extends StatelessWidget {
 
                 // Title
                 Text(
-                  event.title,
+                  widget.event.title,
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                         fontWeight: FontWeight.w900,
                         color: Theme.of(context).colorScheme.onSurface,
@@ -431,73 +491,86 @@ class EventDetailsSheet extends StatelessWidget {
 
                 const SizedBox(height: 16),
 
-                // Date & Time
-                Row(
+                // Date & Time - Wrap content for better responsive layout
+                Wrap(
+                  spacing: 16,
+                  runSpacing: 8,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.blueTint,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.calendar_today_rounded,
-                        color: AppColors.premiumBlue,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    // Date Section
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          'DATE',
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: AppColors.premiumBlue,
-                                    fontWeight: FontWeight.w900,
-                                  ),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.blueTint,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.calendar_today_rounded,
+                            color: AppColors.premiumBlue,
+                            size: 20,
+                          ),
                         ),
-                        Text(
-                          event.formattedDate,
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                        const SizedBox(width: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'DATE',
+                              style:
+                                  Theme.of(context).textTheme.labelSmall?.copyWith(
+                                        color: AppColors.premiumBlue,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                            ),
+                            Text(
+                              widget.event.formattedDate,
+                              style:
+                                  Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
-                    const SizedBox(width: 32),
-                    Container(
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                        color: AppColors.orangeTint,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: const Icon(
-                        Icons.access_time_rounded,
-                        color: Colors.orange,
-                        size: 20,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    // Time Section
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text(
-                          'TIME',
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: Colors.orange,
-                                    fontWeight: FontWeight.w900,
-                                  ),
+                        Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: AppColors.orangeTint,
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: const Icon(
+                            Icons.access_time_rounded,
+                            color: Colors.orange,
+                            size: 20,
+                          ),
                         ),
-                        Text(
-                          event.formattedTime,
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
+                        const SizedBox(width: 8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'TIME',
+                              style:
+                                  Theme.of(context).textTheme.labelSmall?.copyWith(
+                                        color: Colors.orange,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                            ),
+                            Text(
+                              widget.event.formattedTime,
+                              style:
+                                  Theme.of(context).textTheme.bodySmall?.copyWith(
+                                        fontWeight: FontWeight.w800,
+                                      ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -508,6 +581,7 @@ class EventDetailsSheet extends StatelessWidget {
 
                 // Venue
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       padding: const EdgeInsets.all(8),
@@ -522,28 +596,32 @@ class EventDetailsSheet extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 12),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'VENUE',
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withValues(alpha: 0.7),
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                        ),
-                        Text(
-                          event.venue,
-                          style:
-                              Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                  ),
-                        ),
-                      ],
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'VENUE',
+                            style:
+                                Theme.of(context).textTheme.labelSmall?.copyWith(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withValues(alpha: 0.7),
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                          ),
+                          Text(
+                            widget.event.venue,
+                            style:
+                                Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -561,14 +639,14 @@ class EventDetailsSheet extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  event.description,
+                  widget.event.description,
                   style: const TextStyle(
                     fontSize: 15,
                     height: 1.5,
                   ),
                 ),
 
-                if (event.tags.isNotEmpty) ...[
+                if (widget.event.tags.isNotEmpty) ...[
                   const SizedBox(height: 24),
                   Text(
                     'Tags',
@@ -582,7 +660,7 @@ class EventDetailsSheet extends StatelessWidget {
                   Wrap(
                     spacing: 8,
                     runSpacing: 4,
-                    children: event.tags.map((tag) {
+                    children: widget.event.tags.map((tag) {
                       return Chip(
                         label: Text('#$tag'),
                         backgroundColor: Theme.of(context)
@@ -596,55 +674,44 @@ class EventDetailsSheet extends StatelessWidget {
 
                 const SizedBox(height: 32),
 
-                // Register Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => _openRegistrationForm(context),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.premiumBlack,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(vertical: 20),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.assignment_rounded, size: 20),
-                        const SizedBox(width: 12),
-                        Text(
-                          'OPEN REGISTRATION FORM',
-                          style:
-                              Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 2.0,
+                // Action Buttons - Only show for upcoming events
+                if (widget.event.isUpcoming)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _isAddingToCalendar ? null : _addToGoogleCalendar,
+                          icon: _isAddingToCalendar
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2,
                                   ),
+                                )
+                              : const Icon(Icons.calendar_today_rounded),
+                          label: Text(
+                            _isAddingToCalendar ? 'Adding...' : 'Add to Calendar',
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.premiumBlue,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ),
 
-                const SizedBox(height: 32),
+                const SizedBox(height: 24),
               ],
             ),
           ),
         );
       },
-    );
-  }
-
-  void _openRegistrationForm(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      builder: (context) => RegistrationWebView(url: event.registrationLink),
     );
   }
 }

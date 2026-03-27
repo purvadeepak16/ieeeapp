@@ -362,17 +362,23 @@ class _PaperTile extends StatelessWidget {
 
 /* ================== MAGAZINE CARD ================== */
 
-class _MagazineCard extends StatelessWidget {
+class _MagazineCard extends StatefulWidget {
   final MagazineData magazineData;
 
   const _MagazineCard({
     required this.magazineData,
   });
 
+  @override
+  State<_MagazineCard> createState() => _MagazineCardState();
+}
+
+class _MagazineCardState extends State<_MagazineCard> {
   static const accentBlue = Color(0xFF1F6BFF);
+  bool _isPressed = false;
 
   Future<void> _openDriveLink(BuildContext context) async {
-    final Uri url = Uri.parse(magazineData.driveLink);
+    final Uri url = Uri.parse(widget.magazineData.driveLink);
     try {
       if (await canLaunchUrl(url)) {
         await launchUrl(
@@ -403,47 +409,82 @@ class _MagazineCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final surface = Theme.of(context).colorScheme.surface;
+
     return GestureDetector(
       onTap: () => _openDriveLink(context),
-      child: NeoCard(
-        backgroundColor: Colors.transparent,
-        padding: EdgeInsets.zero,
-        borderRadius: 12,
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const Icon(
-                Icons.menu_book_rounded,
-                size: 32,
-                color: accentBlue,
-              ),
-              const SizedBox(height: 12),
-              Text(
-                '${magazineData.year}',
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'MAGAZINE',
-                style: TextStyle(
-                  fontWeight: FontWeight.w900,
-                  fontSize: 10,
-                  letterSpacing: 0.5,
-                  color: Theme.of(context)
+      onTapDown: (_) => setState(() => _isPressed = true),
+      onTapUp: (_) => setState(() => _isPressed = false),
+      onTapCancel: () => setState(() => _isPressed = false),
+      child: AnimatedScale(
+        scale: _isPressed ? 0.94 : 1.0,
+        duration: const Duration(milliseconds: 120),
+        curve: Curves.easeOut,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 120),
+          curve: Curves.easeOut,
+          decoration: BoxDecoration(
+            color: _isPressed
+                ? accentBlue.withValues(alpha: 0.10)
+                : surface,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: _isPressed
+                  ? accentBlue.withValues(alpha: 0.5)
+                  : Theme.of(context)
                       .colorScheme
                       .onSurface
-                      .withValues(alpha: 0.7),
+                      .withValues(alpha: 0.15),
+              width: 1.5,
+            ),
+            boxShadow: _isPressed
+                ? []
+                : [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.08),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+          ),
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.menu_book_rounded,
+                  size: 32,
+                  color: _isPressed
+                      ? accentBlue
+                      : accentBlue.withValues(alpha: 0.75),
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
+                const SizedBox(height: 12),
+                Text(
+                  '${widget.magazineData.year}',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.onSurface,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'MAGAZINE',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w900,
+                    fontSize: 10,
+                    letterSpacing: 0.5,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withValues(alpha: 0.55),
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
           ),
         ),
       ),
