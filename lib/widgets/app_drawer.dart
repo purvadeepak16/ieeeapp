@@ -1,17 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ieee_app/core/auth/auth_controller.dart';
+import 'package:ieee_app/core/auth/auth_provider.dart';
 import 'package:ieee_app/core/theme/app_colors.dart';
 import 'package:ieee_app/core/extensions/context_extensions.dart';
 import 'package:ieee_app/core/constants/app_constants.dart';
 
-class AppDrawer extends StatelessWidget {
+class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final location = GoRouterState.of(context).uri.path;
     final bool isDark = theme.brightness == Brightness.dark;
+    final user = ref.watch(authRepositoryProvider).currentUser;
+    final profileAsync = ref.watch(currentUserProfileProvider);
+
+    final name = profileAsync.maybeWhen(
+      data: (data) {
+        final profileName = (data?['name'] as String?)?.trim();
+        if (profileName != null && profileName.isNotEmpty) {
+          return profileName;
+        }
+        return user?.displayName?.trim().isNotEmpty == true
+            ? user!.displayName!.trim()
+            : 'User';
+      },
+      orElse: () => user?.displayName ?? 'User',
+    );
+
+    final email = profileAsync.maybeWhen(
+      data: (data) => (data?['email'] as String?) ?? user?.email ?? '',
+      orElse: () => user?.email ?? '',
+    );
+    final initial = (name.isNotEmpty ? name[0] : 'U').toUpperCase();
 
     // Modern off-white background for light mode
     final bgColor =
@@ -24,7 +48,12 @@ class AppDrawer extends StatelessWidget {
         bottom: true,
         child: Column(
           children: [
-            _buildDrawerHeader(context),
+            _buildDrawerHeader(
+              context,
+              name: name,
+              email: email,
+              initial: initial,
+            ),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.fromLTRB(16, 20, 16, 20),
@@ -87,8 +116,14 @@ class AppDrawer extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: () {
+                    onPressed: () async {
                       Navigator.pop(context);
+                      try {
+                        await ref.read(authControllerProvider.notifier).signOut();
+                      } catch (_) {}
+                      if (!context.mounted) {
+                        return;
+                      }
                       context.go(AppConstants.loginPath);
                     },
                     icon: const Icon(Icons.logout_rounded, size: 20),
@@ -125,7 +160,12 @@ class AppDrawer extends StatelessWidget {
     );
   }
 
-  Widget _buildDrawerHeader(BuildContext context) {
+  Widget _buildDrawerHeader(
+    BuildContext context, {
+    required String name,
+    required String email,
+    required String initial,
+  }) {
     final theme = Theme.of(context);
     return Container(
       width: double.infinity,
@@ -156,12 +196,12 @@ class AppDrawer extends StatelessWidget {
                 ),
               ],
             ),
-            child: const CircleAvatar(
+            child: CircleAvatar(
               radius: 28,
               backgroundColor: AppColors.white,
               child: Text(
-                'A',
-                style: TextStyle(
+                initial,
+                style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w800,
                     color: AppColors.primaryBlue),
@@ -174,9 +214,9 @@ class AppDrawer extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text(
-                  'Admin User',
-                  style: TextStyle(
+                Text(
+                  name,
+                  style: const TextStyle(
                     fontWeight: FontWeight.w700,
                     fontSize: 18,
                     letterSpacing: -0.2,
@@ -185,7 +225,7 @@ class AppDrawer extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'admin@ieee.org',
+                  email,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.9),
                     fontSize: 14,

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:ieee_app/core/auth/auth_provider.dart';
 import 'package:ieee_app/core/constants/app_constants.dart';
 import 'package:ieee_app/core/theme/app_colors.dart';
 import 'package:ieee_app/models/event_model.dart';
@@ -7,14 +9,14 @@ import 'package:ieee_app/models/micro_skill_model.dart';
 import 'package:ieee_app/widgets/common/neo_card.dart';
 import 'package:ieee_app/widgets/event_card.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends ConsumerState<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -37,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Welcome back, Member',
+                      'Welcome back, ${_getUserName()}',
                       style:
                           Theme.of(context).textTheme.headlineMedium?.copyWith(
                                 fontWeight: FontWeight.w900,
@@ -479,6 +481,15 @@ class _HomeScreenState extends State<HomeScreen> {
         ],
       ),
     );
+  }
+
+  String _getUserName() {
+    final user = ref.read(authRepositoryProvider).currentUser;
+    final displayName = user?.displayName?.trim();
+    if (displayName != null && displayName.isNotEmpty) {
+      return displayName;
+    }
+    return 'Member';
   }
 
   Widget _buildQuickAccessBtn(BuildContext context, IconData icon, String label,

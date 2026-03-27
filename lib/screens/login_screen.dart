@@ -1,22 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:ieee_app/core/constants/app_constants.dart';
+import 'package:ieee_app/core/auth/auth_controller.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
-  static const double fieldHeight = 48; // EXACT from Figma
+  @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  static const double fieldHeight = 48;
+
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen<AuthUiState>(authControllerProvider, (previous, next) {
+      if (next.errorMessage != null && next.errorMessage != previous?.errorMessage) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(next.errorMessage!)));
+      }
+      if (next.successMessage != null && next.successMessage != previous?.successMessage) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text(next.successMessage!)));
+      }
+    });
+
+    final authState = ref.watch(authControllerProvider);
     final theme = Theme.of(context);
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 22),
-          child: Column(
-            children: [
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
               const SizedBox(height: 14),
 
               // Back button
@@ -71,26 +103,57 @@ class LoginScreen extends StatelessWidget {
 
               const SizedBox(height: 30),
 
-              _shadowInput(context, Icons.person, 'Username'),
+              _shadowInput(
+                context,
+                icon: Icons.email,
+                hint: 'Email',
+                controller: _emailController,
+                keyboardType: TextInputType.emailAddress,
+                validator: (value) {
+                  final email = value?.trim() ?? '';
+                  if (email.isEmpty) {
+                    return 'Email is required';
+                  }
+                  if (!email.contains('@')) {
+                    return 'Enter a valid email';
+                  }
+                  return null;
+                },
+              ),
               const SizedBox(height: 16),
-              _shadowInput(context, Icons.lock, 'Password', obscure: true),
+              _shadowInput(
+                context,
+                icon: Icons.lock,
+                hint: 'Password',
+                obscure: true,
+                controller: _passwordController,
+                validator: (value) {
+                  if ((value ?? '').isEmpty) {
+                    return 'Password is required';
+                  }
+                  return null;
+                },
+              ),
 
               const SizedBox(height: 10),
 
               Align(
                 alignment: Alignment.centerRight,
-                child: Text(
-                  'Forgot password?',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                child: GestureDetector(
+                  onTap: () => context.go(AppConstants.forgotPasswordPath),
+                  child: Text(
+                    'Forgot password?',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
+                    ),
                   ),
                 ),
               ),
 
               const SizedBox(height: 26),
 
-              _loginButton(context),
+              _loginButton(context, authState.isLoading),
 
               const SizedBox(height: 30),
 
@@ -119,7 +182,7 @@ class LoginScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 15),
                   ),
                   GestureDetector(
-                    onTap: () => context.go('/register'),
+                    onTap: () => context.go(AppConstants.registerPath),
                     child: Text(
                       'Sign Up',
                       style: TextStyle(
@@ -133,7 +196,8 @@ class LoginScreen extends StatelessWidget {
               ),
 
               const SizedBox(height: 30),
-            ],
+              ],
+            ),
           ),
         ),
       ),
@@ -143,63 +207,74 @@ class LoginScreen extends StatelessWidget {
   // ================= INPUT WITH SHADOW =================
 
   Widget _shadowInput(
-    BuildContext context,
-    IconData icon,
-    String hint, {
+    BuildContext context, {
+    required IconData icon,
+    required String hint,
+    required TextEditingController controller,
+    String? Function(String?)? validator,
+    TextInputType keyboardType = TextInputType.text,
     bool obscure = false,
   }) {
     final theme = Theme.of(context);
-    return Container(
-      height: fieldHeight,
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(
-                alpha: theme.brightness == Brightness.dark ? 0.25 : 0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 3),
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      keyboardType: keyboardType,
+      obscureText: obscure,
+      style: const TextStyle(fontSize: 15),
+      decoration: InputDecoration(
+        filled: true,
+        fillColor: theme.colorScheme.surface,
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: theme.dividerColor,
+            width: 1,
           ),
-        ],
-      ),
-      child: TextField(
-        obscureText: obscure,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: theme.colorScheme.surface,
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: theme.dividerColor,
-              width: 1,
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: theme.colorScheme.primary,
+            width: 1.2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: theme.colorScheme.error,
+            width: 1,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: theme.colorScheme.error,
+            width: 1.2,
+        ),
+        ),
+        hintText: hint,
+        hintStyle: TextStyle(
+          fontSize: 14,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+        ),
+        isDense: true,
+        contentPadding: const EdgeInsets.symmetric(vertical: 13),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: fieldHeight,
+          maxWidth: fieldHeight,
+          minHeight: fieldHeight,
+          maxHeight: fieldHeight,
+        ),
+        prefixIcon: Container(
+          alignment: Alignment.center,
+          decoration: BoxDecoration(
+            color: theme.colorScheme.primary,
+            borderRadius: const BorderRadius.horizontal(
+              left: Radius.circular(10),
             ),
           ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(
-              color: theme.colorScheme.primary,
-              width: 1.2,
-            ),
-          ),
-          hintText: hint,
-          hintStyle: TextStyle(
-            fontSize: 14,
-            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
-          ),
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 13),
-          prefixIcon: Container(
-            width: fieldHeight,
-            alignment: Alignment.center,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary,
-              borderRadius: const BorderRadius.horizontal(
-                left: Radius.circular(10),
-              ),
-            ),
-            child: Icon(icon, color: Colors.white, size: 18),
-          ),
+          child: Icon(icon, color: Colors.white, size: 18),
         ),
       ),
     );
@@ -207,7 +282,7 @@ class LoginScreen extends StatelessWidget {
 
   // ================= LOGIN BUTTON =================
 
-  Widget _loginButton(BuildContext context) {
+  Widget _loginButton(BuildContext context, bool isLoading) {
     return SizedBox(
       width: double.infinity,
       height: 52,
@@ -218,11 +293,40 @@ class LoginScreen extends StatelessWidget {
             borderRadius: BorderRadius.circular(14),
           ),
         ),
-        onPressed: () => context.go('/home'),
-        child: const Text(
-          'Login',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-        ),
+        onPressed: isLoading
+            ? null
+            : () async {
+                FocusScope.of(context).unfocus();
+                if (!_formKey.currentState!.validate()) {
+                  return;
+                }
+
+                final controller = ref.read(authControllerProvider.notifier);
+                try {
+                  final verified = await controller.signIn(
+                    email: _emailController.text.trim(),
+                    password: _passwordController.text,
+                  );
+                  if (!context.mounted) {
+                    return;
+                  }
+                  if (verified) {
+                    context.go(AppConstants.homePath);
+                  } else {
+                    context.go(AppConstants.verifyEmailPath);
+                  }
+                } catch (_) {}
+              },
+        child: isLoading
+            ? const SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : const Text(
+                'Login',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
       ),
     );
   }

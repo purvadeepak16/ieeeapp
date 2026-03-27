@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "422202409961",
+    "project_id": "ieeeapp1",
+    "storage_bucket": "ieeeapp1.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:422202409961:android:73556bf4c3fd32717d4178",
+        "android_client_info": {
+          "package_name": "com.ieee.vesit.ieee__app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyArFKH03-PHVw22K2DlUTnBF1aS_sgyDGY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
