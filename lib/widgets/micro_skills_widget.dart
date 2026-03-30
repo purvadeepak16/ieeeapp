@@ -16,7 +16,7 @@ class MicroSkillsWidget extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: dailyArticleAsync.when(
-        loading: () => _buildLoadingState(),
+        loading: () => _buildLoadingState(context),
         error: (error, stackTrace) => _buildErrorState(context, error),
         data: (article) {
           final microSkill = _convertArticleToMicroSkill(article);
@@ -65,8 +65,10 @@ class MicroSkillsWidget extends ConsumerWidget {
     MicroSkill skill,
     String articleUrl,
   ) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return NeoCard(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -80,10 +82,10 @@ class MicroSkillsWidget extends ConsumerWidget {
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black, width: 1.5),
+                      border: Border.all(color: colorScheme.onSurface, width: 1.5),
                     ),
                     child: CircleAvatar(
-                      backgroundColor: Theme.of(context).colorScheme.primary,
+                      backgroundColor: colorScheme.primary,
                       radius: 16,
                       child: Text(
                         skill.icon,
@@ -97,7 +99,7 @@ class MicroSkillsWidget extends ConsumerWidget {
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.w900,
                           letterSpacing: 1.0,
-                          color: Colors.black,
+                          color: colorScheme.onSurface,
                         ),
                   ),
                 ],
@@ -127,7 +129,7 @@ class MicroSkillsWidget extends ConsumerWidget {
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w900,
-                  color: Colors.black,
+                  color: colorScheme.onSurface,
                   letterSpacing: -0.5,
                 ),
           ),
@@ -137,7 +139,7 @@ class MicroSkillsWidget extends ConsumerWidget {
             maxLines: 3,
             overflow: TextOverflow.ellipsis,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.black87,
+                  color: colorScheme.onSurface.withAlpha(220),
                   height: 1.5,
                   fontWeight: FontWeight.w500,
                 ),
@@ -155,16 +157,16 @@ class MicroSkillsWidget extends ConsumerWidget {
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color:
-                          Theme.of(context).colorScheme.primary.withAlpha(51),
+                          colorScheme.primary.withAlpha(51),
                       borderRadius: BorderRadius.circular(4),
                       border: Border.all(
-                          color: Theme.of(context).colorScheme.primary,
+                          color: colorScheme.primary,
                           width: 1),
                     ),
                     child: Text(
                       skill.category.toUpperCase(),
                       style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
+                        color: colorScheme.primary,
                         fontWeight: FontWeight.w900,
                         fontSize: 10,
                       ),
@@ -199,8 +201,8 @@ class MicroSkillsWidget extends ConsumerWidget {
                   icon: const Icon(Icons.rocket_launch_rounded),
                   label: const Text('READ FULL ARTICLE'),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
-                    foregroundColor: Colors.white,
+                    backgroundColor: colorScheme.onSurface,
+                    foregroundColor: colorScheme.surface,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(4),
                     ),
@@ -215,9 +217,9 @@ class MicroSkillsWidget extends ConsumerWidget {
           Container(
             height: 8,
             decoration: BoxDecoration(
-              color: Colors.black12,
+              color: colorScheme.onSurface.withAlpha(30),
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.black, width: 1),
+              border: Border.all(color: colorScheme.onSurface, width: 1),
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
@@ -229,21 +231,21 @@ class MicroSkillsWidget extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: 8),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
                 'UPDATED DAILY',
                 style: TextStyle(
                     fontSize: 10,
-                    color: Colors.black54,
+                    color: colorScheme.onSurface.withAlpha(140),
                     fontWeight: FontWeight.w900),
               ),
               Text(
                 'FROM DEV.TO',
                 style: TextStyle(
                     fontSize: 10,
-                    color: Colors.black54,
+                    color: colorScheme.onSurface.withAlpha(140),
                     fontWeight: FontWeight.w900),
               ),
             ],
@@ -254,9 +256,11 @@ class MicroSkillsWidget extends ConsumerWidget {
   }
 
   /// Build loading state
-  Widget _buildLoadingState() {
+  Widget _buildLoadingState(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return NeoCard(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,21 +274,21 @@ class MicroSkillsWidget extends ConsumerWidget {
                   Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.black, width: 1.5),
+                      border: Border.all(color: colorScheme.onSurface, width: 1.5),
                     ),
-                    child: const CircleAvatar(
-                      backgroundColor: Colors.blue,
+                    child: CircleAvatar(
+                      backgroundColor: colorScheme.primary,
                       radius: 16,
-                      child: Text('📚', style: TextStyle(fontSize: 14)),
+                      child: const Text('📚', style: TextStyle(fontSize: 14)),
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
+                  Text(
                     'DAILY MICRO-SKILL',
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.0,
-                      color: Colors.black,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -294,9 +298,9 @@ class MicroSkillsWidget extends ConsumerWidget {
           const SizedBox(height: 20),
           const CircularProgressIndicator(),
           const SizedBox(height: 12),
-          const Text(
+          Text(
             'Loading today\'s skill...',
-            style: TextStyle(color: Colors.black54),
+            style: TextStyle(color: colorScheme.onSurface.withAlpha(140)),
           ),
         ],
       ),
@@ -305,8 +309,10 @@ class MicroSkillsWidget extends ConsumerWidget {
 
   /// Build error state
   Widget _buildErrorState(BuildContext context, Object error) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return NeoCard(
-      backgroundColor: Colors.white,
+      backgroundColor: colorScheme.surface,
       padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -329,12 +335,12 @@ class MicroSkillsWidget extends ConsumerWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  const Text(
+                  Text(
                     'DAILY MICRO-SKILL',
                     style: TextStyle(
                       fontWeight: FontWeight.w900,
                       letterSpacing: 1.0,
-                      color: Colors.black,
+                      color: colorScheme.onSurface,
                     ),
                   ),
                 ],
@@ -342,17 +348,17 @@ class MicroSkillsWidget extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 20),
-          const Text(
+          Text(
             'Unable to load today\'s skill',
             style: TextStyle(
               fontWeight: FontWeight.w900,
-              color: Colors.black,
+              color: colorScheme.onSurface,
             ),
           ),
           const SizedBox(height: 8),
-          const Text(
+          Text(
             'Please check your internet connection',
-            style: TextStyle(color: Colors.black54, fontSize: 12),
+            style: TextStyle(color: colorScheme.onSurface.withAlpha(140), fontSize: 12),
           ),
         ],
       ),

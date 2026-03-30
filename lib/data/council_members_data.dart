@@ -434,4 +434,35 @@ class CouncilMembersData {
         imagePath: 'assets/images/se_council/tia.png'
     ),
   ];
+
+  static const developers = [
+    CouncilMember(
+      name: 'Pratham Matkar',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: 'd2022.pratham.matkar@ves.ac.in',
+      quote: '',
+    ),
+    CouncilMember(
+      name: 'Samarth Adsare',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: '2023.samarth.adsare@ves.ac.in',
+      quote: '',
+    ),
+    CouncilMember(
+      name: 'Purva Mhatre',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: 'd2023.purva.mhatre@ves.ac.in',
+      quote: '',
+    ),
+    CouncilMember(
+      name: 'Krish Dambir',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: '2023.krish.dambir@ves.ac.in',
+      quote: '',
+    ),
+  ];
 }
