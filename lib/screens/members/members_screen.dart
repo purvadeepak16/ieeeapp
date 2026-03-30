@@ -73,6 +73,7 @@ class MembersScreen extends StatelessWidget {
     const senior = CouncilMembersData.seniorCouncil;
     const junior = CouncilMembersData.juniorCouncil;
     const se = CouncilMembersData.seCouncil;
+    const devs = CouncilMembersData.developers;
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -92,6 +93,8 @@ class MembersScreen extends StatelessWidget {
                       title: 'Junior Council', members: junior),
                   const Divider(height: 1, indent: 16, endIndent: 16),
                   _expandableSection(context, title: 'SE Council', members: se),
+                  const Divider(height: 1, indent: 16, endIndent: 16),
+                  _expandableSection(context, title: 'Developers', members: devs),
                   const SizedBox(height: 20),
                 ],
               ),
