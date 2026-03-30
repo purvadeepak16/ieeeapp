@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:ieee_app/models/council_member_model.dart';
 import 'package:ieee_app/widgets/common/neo_card.dart';
+import 'package:ionicons/ionicons.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CouncilMemberCard extends StatelessWidget {
   final CouncilMember member;
@@ -11,6 +13,41 @@ class CouncilMemberCard extends StatelessWidget {
     required this.member,
     this.onTap,
   });
+
+  Future<void> _launch(BuildContext context, String url) async {
+    if (url.trim().isEmpty) return;
+    final uri = Uri.parse(url);
+    if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not launch $url')),
+        );
+      }
+    }
+  }
+
+  Widget _socialIcon({
+    required IconData icon,
+    required Color color,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(right: 12),
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          shape: BoxShape.circle,
+        ),
+        child: Icon(
+          icon,
+          size: 16,
+          color: color,
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +119,30 @@ class CouncilMemberCard extends StatelessWidget {
                         letterSpacing: 0.5,
                       ),
                     ),
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      _socialIcon(
+                        icon: Icons.mail,
+                        color: Colors.redAccent,
+                        onTap: () => _launch(context, 'mailto:${member.email}'),
+                      ),
+                      if (member.linkedinUrl != null &&
+                          member.linkedinUrl!.trim().isNotEmpty)
+                        _socialIcon(
+                          icon: Ionicons.logo_linkedin,
+                          color: const Color(0xFF0077B5),
+                          onTap: () => _launch(context, member.linkedinUrl!),
+                        ),
+                      if (member.githubUrl != null &&
+                          member.githubUrl!.trim().isNotEmpty)
+                        _socialIcon(
+                          icon: Ionicons.logo_github,
+                          color: const Color(0xFF333333),
+                          onTap: () => _launch(context, member.githubUrl!),
+                        ),
+                    ],
                   ),
                 ],
               ),
