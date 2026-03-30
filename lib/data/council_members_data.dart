@@ -490,4 +490,56 @@ class CouncilMembersData {
       linkedinUrl: 'https://www.linkedin.com/me?trk=p_mwlite_feed-secondary_nav',
     ),
   ];
+
+  static const developers = [
+    CouncilMember(
+      name: 'Samarth Adsare',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: '2023.samarth.adsare@ves.ac.in',
+      quote: '',
+    ),
+    CouncilMember(
+      name: 'Purva Mhatre',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: 'd2023.purva.mhatre@ves.ac.in',
+      quote: '',
+    ),
+    CouncilMember(
+      name: 'Riya Pailwan',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: '2024.riya.pailwan@ves.ac.in',
+      quote: '',
+    ),
+    CouncilMember(
+      name: 'Shubhada Deshmukh',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: 'd2025.shubhada.deshmukh@ves.ac.in',
+      quote: '',
+    ),
+    CouncilMember(
+      name: 'Nikhil Kheranjani',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: '2024.nikhil.kherajani@ves.ac.in',
+      quote: '',
+    ),
+    CouncilMember(
+      name: 'Aditi Ekawade',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: '2024.aditi.ekawade@ves.ac.in',
+      quote: '',
+    ),
+    CouncilMember(
+      name: 'Riju Mishra',
+      role: 'Developer',
+      color: Color(0xFF80CBC4),
+      email: '2024.riju.mishra@ves.ac.in',
+      quote: '',
+    ),
+  ];
 }
