@@ -45,5 +45,9 @@ flutter:
     - assets/images/
     - assets/banners/
     - assets/events/
+    - assets/images/BE_council/
+    - assets/images/se_council/
     - assets/images/logos/
+    - assets/images/faculty/
+    - assets/images/TE_council/
 
