@@ -1,0 +1,12 @@
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/logos/ieee_main_logo.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  windows:
+    generate: true
+  macos:
+    generate: true
+  linux:
+    generate: true
