@@ -27,11 +27,14 @@ class _MemberCardState extends State<MemberCard> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final onSurface = theme.colorScheme.onSurface;
+
     return AnimatedScale(
       duration: const Duration(milliseconds: 120),
       scale: _pressed ? 0.98 : 1,
       child: NeoCard(
-        backgroundColor: AppColors.white,
+        backgroundColor: theme.colorScheme.surface,
         borderRadius: 20,
         padding: EdgeInsets.zero,
         child: InkWell(
@@ -52,7 +55,7 @@ class _MemberCardState extends State<MemberCard> {
                       height: 120,
                       color: Colors.black12,
                       alignment: Alignment.center,
-                      child: const Icon(Icons.person, size: 56),
+                      child: Icon(Icons.person, size: 56, color: onSurface),
                     ),
                   ),
                 ),
@@ -60,8 +63,8 @@ class _MemberCardState extends State<MemberCard> {
                 Text(
                   widget.member.name,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textDark,
+                  style: TextStyle(
+                    color: onSurface,
                     fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
@@ -70,8 +73,8 @@ class _MemberCardState extends State<MemberCard> {
                 Text(
                   widget.member.role,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: AppColors.textDark,
+                  style: TextStyle(
+                    color: onSurface.withOpacity(0.8),
                     fontSize: 13,
                   ),
                 ),
@@ -80,16 +83,15 @@ class _MemberCardState extends State<MemberCard> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton(
-                      icon: const Icon(Ionicons.logo_github, color: AppColors.textDark),
+                      icon: Icon(Ionicons.logo_github, color: onSurface),
                       onPressed: () => _launch(widget.member.github),
                     ),
                     IconButton(
-                      icon: const Icon(Ionicons.logo_linkedin,
-                          color: AppColors.textDark),
+                      icon: Icon(Ionicons.logo_linkedin, color: onSurface),
                       onPressed: () => _launch(widget.member.linkedin),
                     ),
                     IconButton(
-                      icon: const Icon(Icons.email, color: AppColors.textDark),
+                      icon: Icon(Icons.email, color: onSurface),
                       onPressed: () => _launch('mailto:${widget.member.email}'),
                     ),
                   ],
