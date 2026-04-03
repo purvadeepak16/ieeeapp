@@ -6,6 +6,7 @@ import 'package:ieee_app/core/auth/auth_provider.dart';
 import 'package:ieee_app/core/theme/app_colors.dart';
 import 'package:ieee_app/core/extensions/context_extensions.dart';
 import 'package:ieee_app/core/constants/app_constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AppDrawer extends ConsumerWidget {
   const AppDrawer({super.key});
@@ -96,6 +97,32 @@ class AppDrawer extends ConsumerWidget {
                     onTap: () {
                       Navigator.pop(context);
                       context.go(AppConstants.wiePath);
+                    },
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    icon: Icons.travel_explore_rounded,
+                    label: 'IEEE Xplore',
+                    highlightColor: const Color(0xFF00629B),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      final url = Uri.parse('https://ieeexplore.ieee.org/Xplore/home.jsp');
+                      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                        debugPrint('Could not launch $url');
+                      }
+                    },
+                  ),
+                  _buildDrawerItem(
+                    context,
+                    icon: Icons.article_rounded,
+                    label: 'IEEE Spectrum',
+                    highlightColor: const Color(0xFF00629B),
+                    onTap: () async {
+                      Navigator.pop(context);
+                      final url = Uri.parse('https://spectrum.ieee.org/');
+                      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                        debugPrint('Could not launch $url');
+                      }
                     },
                   ),
                 ],
