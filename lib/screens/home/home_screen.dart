@@ -73,10 +73,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               _buildFeaturedEvent(context),
               const SizedBox(height: 48),
 
-              // Section 3 - Announcements
-              _buildAnnouncementsSection(context),
-              const SizedBox(height: 48),
-
               // Section 4 - Quick Access
               _buildQuickAccessSection(context),
               const SizedBox(height: 64),
@@ -322,83 +318,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       default:
         return const Color(0xFF6B7280);
     }
-  }
-
-  Widget _buildAnnouncementsSection(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                'Announcements',
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.w900,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      letterSpacing: -0.5,
-                    ),
-              ),
-              TextButton(
-                onPressed: () {},
-                child: const Text('VIEW ALL',
-                    style: TextStyle(
-                        color: AppColors.premiumBlue,
-                        fontWeight: FontWeight.w900,
-                        fontSize: 12,
-                        letterSpacing: 1.0)),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          _buildAnnouncementItem(
-            context,
-            'Membership Renewals Started',
-            'Feb 15, 2026',
-          ),
-          const Divider(height: 1, color: AppColors.border),
-          _buildAnnouncementItem(
-            context,
-            'Call for Paper: IEEE AISC 2026',
-            'Feb 12, 2026',
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAnnouncementItem(
-      BuildContext context, String title, String date) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Expanded(
-            child: Text(
-              title,
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.w900,
-                    color: Theme.of(context).colorScheme.onSurface,
-                  ),
-            ),
-          ),
-          Text(
-            date.toUpperCase(),
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
-                      .withValues(alpha: 0.6),
-                  fontWeight: FontWeight.w900,
-                  letterSpacing: 0.5,
-                ),
-          ),
-        ],
-      ),
-    );
   }
 
   Widget _buildQuickAccessSection(BuildContext context) {
