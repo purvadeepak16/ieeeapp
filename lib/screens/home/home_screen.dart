@@ -8,6 +8,7 @@ import 'package:ieee_app/models/event_model.dart';
 import 'package:ieee_app/widgets/common/neo_card.dart';
 import 'package:ieee_app/widgets/event_card.dart';
 import 'package:ieee_app/widgets/micro_skills_widget.dart';
+import 'package:ieee_app/screens/events/providers/events_provider.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
   const HomeScreen({super.key});
@@ -97,157 +98,230 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Featured Event',
+            'Upcoming Events',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
           ),
           const SizedBox(height: 16),
-          NeoCard(
-            padding: EdgeInsets.zero,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Stack(
-                  children: [
-                    Container(
-                      height: 200,
-                      width: double.infinity,
-                      decoration: const BoxDecoration(
-                        image: DecorationImage(
-                          image: NetworkImage(
-                              'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80'),
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 16,
-                      right: 16,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 8),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(4),
-                          border: Border.all(
-                              color: AppColors.premiumBlack, width: 2),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: AppColors.premiumBlack,
-                              offset: Offset(3, 3),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          children: [
-                            Text(
-                              '24',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
-                                  ?.copyWith(
-                                    color: AppColors.premiumBlue,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                            ),
-                            Text(
-                              'FEB',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelSmall
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w900,
-                                    letterSpacing: 1.0,
-                                  ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'IEEE Tech Nexus 2026',
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.w900,
-                              color: Theme.of(context).colorScheme.onSurface,
-                              letterSpacing: -0.5,
-                            ),
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        children: [
-                          const Icon(Icons.location_on_rounded,
-                              size: 18, color: AppColors.premiumBlue),
-                          const SizedBox(width: 8),
-                          Text(
-                            'VESIT Campus • 09:00 AM',
-                            style:
-                                Theme.of(context).textTheme.bodySmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface
-                                          .withValues(alpha: 0.7),
-                                    ),
+          Consumer(
+            builder: (context, ref, child) {
+              final allEvents = ref.watch(eventsProvider);
+              
+              // Filter for upcoming events (date >= today)
+              final now = DateTime.now();
+              final upcomingEvents = allEvents
+                  .where((event) => event.date.isAfter(DateTime(now.year, now.month, now.day)))
+                  .toList()
+                ..sort((a, b) => a.date.compareTo(b.date));
+
+              if (upcomingEvents.isEmpty) {
+                return Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(32),
+                    child: Text(
+                      'No upcoming events',
+                      style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.6),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 24),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            final featuredEvent = IEEEEvent(
-                              title: 'IEEE Tech Nexus 2026',
-                              description:
-                                  'Join us for the flagship technical symposium of IEEE VESIT.',
-                              date: DateTime(2026, 2, 24),
-                              startTime: const TimeOfDay(hour: 9, minute: 0),
-                              venue: 'VESIT Campus',
-                              type: EventType.conference,
-                              registrationLink: 'https://ieee.org',
-                              tags: ['Tech', 'Navy', 'Premium'],
-                              isFeatured: true,
-                            );
-                            showModalBottomSheet(
-                              context: context,
-                              isScrollControlled: true,
-                              shape: const RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(24))),
-                              builder: (context) =>
-                                  EventDetailsSheet(event: featuredEvent),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.premiumBlack,
-                            foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4)),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          child: const Text('VIEW DETAILS',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 1.0)),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
+                );
+              }
+
+              return SizedBox(
+                height: 240,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: upcomingEvents.length,
+                  itemBuilder: (context, index) {
+                    final event = upcomingEvents[index];
+                    return Padding(
+                      padding: EdgeInsets.only(
+                        right: index == upcomingEvents.length - 1 ? 0 : 16,
+                      ),
+                      child: _buildEventCard(context, event),
+                    );
+                  },
                 ),
-              ],
-            ),
+              );
+            },
           ),
         ],
       ),
     );
+  }
+
+  Widget _buildEventCard(BuildContext context, IEEEEvent event) {
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+          context: context,
+          isScrollControlled: true,
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+          builder: (context) => EventDetailsSheet(event: event),
+        );
+      },
+      child: NeoCard(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        padding: EdgeInsets.zero,
+        child: SizedBox(
+          width: 280,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Event Date Badge
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(16),
+                decoration: BoxDecoration(
+                  color: _getEventColor(event.type),
+                  border: const Border(
+                    bottom: BorderSide(color: Colors.black, width: 2),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      event.title,
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w900,
+                            color: Colors.white,
+                          ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      _formatDate(event.date),
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: Colors.white.withValues(alpha: 0.9),
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              // Event Details
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          const Icon(Icons.location_on_rounded,
+                              size: 16, color: AppColors.premiumBlue),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: Text(
+                              event.venue,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .labelSmall
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withValues(alpha: 0.7),
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      Expanded(
+                        child: Text(
+                          event.description,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withValues(alpha: 0.7),
+                              ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Wrap(
+                        spacing: 6,
+                        children: event.tags
+                            .take(2)
+                            .map(
+                              (tag) => Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 4),
+                                decoration: BoxDecoration(
+                                  color: _getEventColor(event.type)
+                                      .withValues(alpha: 0.2),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(
+                                  tag.toLowerCase(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelSmall
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: _getEventColor(event.type),
+                                      ),
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final monthNames = [
+      'JAN',
+      'FEB',
+      'MAR',
+      'APR',
+      'MAY',
+      'JUN',
+      'JUL',
+      'AUG',
+      'SEP',
+      'OCT',
+      'NOV',
+      'DEC'
+    ];
+    return '${date.day.toString().padLeft(2, '0')} ${monthNames[date.month - 1]}';
+  }
+
+  Color _getEventColor(EventType type) {
+    switch (type) {
+      case EventType.workshop:
+        return const Color(0xFF3B82F6);
+      case EventType.competition:
+        return const Color(0xFFEF4444);
+      case EventType.conference:
+        return const Color(0xFF8B5CF6);
+      case EventType.social:
+        return const Color(0xFF10B981);
+      default:
+        return const Color(0xFF6B7280);
+    }
   }
 
   Widget _buildAnnouncementsSection(BuildContext context) {

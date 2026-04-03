@@ -6,10 +6,6 @@ class WiePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Scaffold(
-      backgroundColor: theme.colorScheme.surface,
-      body: const WieBody(),
-    );
+    return const WieBody();
   }
 }

@@ -162,11 +162,18 @@ class _SettingsPageState extends ConsumerState<SettingsPage> with TickerProvider
                                     padding: const EdgeInsets.all(4),
                                     child: CircleAvatar(
                                       radius: 64,
-                                      backgroundColor: Colors.transparent,
-                                      backgroundImage: _avatarImage != null
-                                          ? FileImage(_avatarImage!)
-                                          : const AssetImage('assets/images/avatar.png')
-                                              as ImageProvider,
+                                      backgroundColor: accentBlue.withOpacity(0.2),
+                                      child: Text(
+                                        _getUserName().isEmpty 
+                                          ? '?' 
+                                          : _getUserName()[0].toUpperCase(),
+                                        style: TextStyle(
+                                          fontSize: 48,
+                                          fontWeight: FontWeight.w800,
+                                          color: accentBlue,
+                                          letterSpacing: -1,
+                                        ),
+                                      ),
                                     ),
                                   ),
                                 );

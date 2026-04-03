@@ -9,29 +9,25 @@ class WieBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pad = MediaQuery.of(context).size.width < 400 ? 12.0 : 16.0;
-    final theme = Theme.of(context);
-
-    return SingleChildScrollView(
-      child: Container(
-        color: theme.colorScheme.surface,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            const HeroStrip(),
-            Padding(padding: EdgeInsets.all(pad), child: const GlobalWieInfo()),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: pad),
-              child: const InspiringCarousel(),
-            ),
-            const SizedBox(height: 16),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: pad),
-              child: const TeamSection(),
-            ),
-            const SizedBox(height: 24),
-          ],
-        ),
+    return const SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          HeroStrip(),
+          Padding(
+              padding: EdgeInsets.all(16),
+              child: GlobalWieInfo()),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: InspiringCarousel(),
+          ),
+          SizedBox(height: 16),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16),
+            child: TeamSection(),
+          ),
+          SizedBox(height: 24),
+        ],
       ),
     );
   }

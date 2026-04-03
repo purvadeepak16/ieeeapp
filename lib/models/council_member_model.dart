@@ -5,16 +5,18 @@ class CouncilMember {
   final String role;
   final Color color;
   final String email;
-  final String quote;
   final String? imagePath;
+  final String? linkedinUrl;
+  final String? githubUrl;
 
   const CouncilMember({
     required this.name,
     required this.role,
     required this.color,
     required this.email,
-    required this.quote,
+    this.githubUrl,
     this.imagePath,
+    this.linkedinUrl,
   });
 
   CouncilMember copyWith({
@@ -26,8 +28,9 @@ class CouncilMember {
       role: role,
       color: color,
       email: email ?? this.email,
-      quote: quote ?? this.quote,
+      githubUrl: githubUrl,
       imagePath: imagePath,
+      linkedinUrl: linkedinUrl,
     );
   }
 }
