@@ -518,6 +518,16 @@ class CouncilMembersData {
   ];
 
   static const developers = [
+
+    CouncilMember(
+      name: 'Pratham Matkar',
+      role: 'Sr. Web Editor',
+      color: Color(0xFF54DABB),
+      email: 'd2022.pratham.matkar@ves.ac.in',
+      githubUrl: "https://github.com/prathamm2506",
+      linkedinUrl: 'https://www.linkedin.com/in/pratham-matkar-a2bb77257/',
+      imagePath: 'assets/images/BE_council/PrathamMatkar.jpg',
+    ),
     CouncilMember(
       name: 'Samarth Adsare',
       role: 'Jr. Technical Head',
