@@ -79,14 +79,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Image.asset(
                     'assets/images/logos/ieee_main_logo.png',
                     height: 34,
+                     color: theme.brightness == Brightness.dark
+                        ? Colors.white
+                        : null,
                   ),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     'IEEE-VESIT',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF0A2A66),
+                      color: theme.brightness == Brightness.dark
+                          ? Colors.white
+                          : const Color(0xFF0A2A66),
                     ),
                   ),
                 ],
