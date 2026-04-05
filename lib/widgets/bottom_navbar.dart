@@ -171,7 +171,9 @@ class BottomNavBar extends StatelessWidget {
     if (location.startsWith(AppConstants.membersPath)) return 2;
     if (location.startsWith(AppConstants.magazinePath)) return 3;
     if (location.startsWith(AppConstants.profilePath)) return 4;
-    return 0;
+    // Return -1 for routes that are not part of the bottom navigation
+    // (e.g. /wie) so that no bottom item is shown as selected.
+    return -1;
   }
 }
 

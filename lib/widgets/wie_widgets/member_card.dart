@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:ieee_app/core/theme/app_colors.dart';
 import 'package:ieee_app/models/wie_member_model.dart';
 import 'package:ieee_app/widgets/common/neo_card.dart';
 import 'package:ionicons/ionicons.dart';

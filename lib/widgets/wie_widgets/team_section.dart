@@ -14,8 +14,8 @@ class TeamSection extends StatelessWidget {
         role: 'Sr. Women in Engineering',
         email: '2022.anshi.tiware@ves.ac.in',
         linkedin: 'https://www.linkedin.com/in/anshi-tiwari-b4a6642a7/',
-        github: "https://github.com/anshi1108",
-        image: "assets/images/BE_council/Anshi.jpeg",
+        github: 'https://github.com/anshi1108',
+        image: 'assets/images/BE_council/Anshi.jpeg',
       ),
       const WieMemberModel(
         name: 'Vedika Parab',
