@@ -31,10 +31,12 @@ class MagazineScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final events = ref.watch(eventsProvider);
     // Filter workshops that have resourceLink
-    final workshops = events
+    final allWorkshops = events
         .where((event) => event.type.toString().contains('workshop'))
         .toList();
-    
+        
+    final seenTitles = <String>{};
+    final workshops = allWorkshops.where((w) => seenTitles.add(w.title)).toList();
     final theme = Theme.of(context);
 
     return SafeArea(

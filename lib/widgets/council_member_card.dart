@@ -139,7 +139,7 @@ class CouncilMemberCard extends StatelessWidget {
                           member.githubUrl!.trim().isNotEmpty)
                         _socialIcon(
                           icon: Ionicons.logo_github,
-                          color: const Color(0xFF333333),
+                          color: Theme.of(context).colorScheme.onSurface,
                           onTap: () => _launch(context, member.githubUrl!),
                         ),
                     ],
