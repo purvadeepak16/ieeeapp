@@ -14,6 +14,7 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'B51, VESIT',
     type: EventType.social,
+    imageUrl: 'assets/events/symposium.jpg',
     tags: ['symposium', 'networking', 'community'],
   ),
   IEEEEvent(
@@ -25,8 +26,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'B51, VESIT',
     type: EventType.workshop,
+    imageUrl: 'assets/events/ML.jpeg',
     tags: ['machinelearning', 'ai', 'datascience'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Machine Minds 2.0',
@@ -37,8 +38,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'B51, VESIT',
     type: EventType.workshop,
+    imageUrl: 'assets/events/ML.jpeg',
     tags: ['machinelearning', 'ai', 'datascience'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Capture The Flag Competition',
@@ -49,6 +50,7 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'B51, B52, VESIT',
     type: EventType.competition,
+    imageUrl: 'assets/events/CTF.jpeg',
     tags: ['cybersecurity', 'ctf', 'competition'],
   ),
   IEEEEvent(
@@ -60,8 +62,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 21, minute: 00),
     venue: 'Online',
     type: EventType.workshop,
+    imageUrl: 'assets/events/CTF.jpeg',
     tags: ['cybersecurity', 'ctf', 'workshop'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Capture The Flag Workshop',
@@ -72,8 +74,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 21, minute: 00),
     venue: 'Online',
     type: EventType.workshop,
+    imageUrl: 'assets/events/CTF.jpeg',
     tags: ['cybersecurity', 'ctf', 'workshop'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Arcane Hackathon',
@@ -84,6 +86,7 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 10, minute: 00),
     venue: 'Online',
     type: EventType.competition,
+    imageUrl: 'assets/events/Arcane.jpeg',
     tags: ['hackathon', 'innovation', 'coding'],
   ),
   IEEEEvent(
@@ -95,6 +98,7 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 23, minute: 59),
     venue: 'Online',
     type: EventType.competition,
+    imageUrl: 'assets/events/Arcane.jpeg',
     tags: ['hackathon', 'innovation', 'coding'],
   ),
   IEEEEvent(
@@ -106,8 +110,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 18, minute: 30),
     venue: 'Online',
     type: EventType.workshop,
+    imageUrl: 'assets/events/Apicalypse.png',
     tags: ['api', 'backend', 'integration'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'ApiCalypse',
@@ -118,8 +122,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 18, minute: 30),
     venue: 'Online',
     type: EventType.workshop,
+    imageUrl: 'assets/events/Apicalypse.png',
     tags: ['api', 'backend', 'integration'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'TPP Workshop',
@@ -130,8 +134,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 18, minute: 0),
     venue: 'B21, VESIT',
     type: EventType.workshop,
+    imageUrl: 'assets/events/tpp_25.png',
     tags: ['presentation', 'research', 'technical'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'TPP Workshop',
@@ -142,8 +146,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'B41, VESIT',
     type: EventType.workshop,
+    imageUrl: 'assets/events/tpp_25.png',
     tags: ['presentation', 'research', 'technical'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'UI/UX Workshop',
@@ -154,8 +158,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'B21, VESIT',
     type: EventType.workshop,
+    imageUrl: 'assets/events/uiux25.png',
     tags: ['design', 'uiux', 'creativity'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'UI/UX Workshop',
@@ -166,8 +170,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'B21, VESIT',
     type: EventType.workshop,
+    imageUrl: 'assets/events/uiux25.png',
     tags: ['design', 'uiux', 'creativity'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Build.PCB',
@@ -179,6 +183,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.competition,
     isFeatured: true,
+    imageUrl: 'assets/events/pcb.png',
     tags: ['pcb', 'electronics', 'hardware'],
   ),
   IEEEEvent(
@@ -191,6 +196,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.competition,
     isFeatured: true,
+    imageUrl: 'assets/events/pcb.png',
     tags: ['pcb', 'electronics', 'hardware'],
   ),
   IEEEEvent(
@@ -202,8 +208,8 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'Online',
     type: EventType.workshop,
+    imageUrl: 'assets/events/mongo.png',
     tags: ['mongodb', 'database', 'nosql'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
   IEEEEvent(
     title: 'Mongo.INIT()',
@@ -214,9 +220,10 @@ final _demoEvents = [
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'Online',
     type: EventType.workshop,
+    imageUrl: 'assets/events/mongo.png',
     tags: ['mongodb', 'database', 'nosql'],
-    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
   ),
+
 ];
 
 final selectedDateProvider = StateProvider<DateTime>((ref) => DateTime.now());

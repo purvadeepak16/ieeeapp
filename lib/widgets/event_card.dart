@@ -461,6 +461,24 @@ class _EventDetailsSheetState extends ConsumerState<EventDetailsSheet> {
 
                 const SizedBox(height: 24),
 
+                // Responsive Event Image
+                if (widget.event.imageUrl != null) ...[
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(16),
+                    child: Image.asset(
+                      widget.event.imageUrl!,
+                      width: double.infinity,
+                      fit: BoxFit.fitWidth,
+                      errorBuilder: (context, error, stackTrace) => Container(
+                        color: AppColors.surfaceMuted,
+                        child: const Icon(Icons.image_not_supported,
+                            size: 50, color: Colors.grey),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+
                 // Event Type
                 Container(
                   padding:
