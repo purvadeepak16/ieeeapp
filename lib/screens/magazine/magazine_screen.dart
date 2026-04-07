@@ -11,19 +11,19 @@ class MagazineScreen extends ConsumerWidget {
   // Magazine data for three consecutive years
   static final List<MagazineData> magazines = [
     MagazineData(
-      year: 2024,
+      year: 2025,
       driveLink:
-          'https://drive.google.com/file/d/14mnQqGuPa0hvi9m7xzME9yyhpJCunRci/view?usp=sharing',
+          'https://drive.google.com/file/d/19NE3msQQ2hD1Z49qP6Pc3wLSAUCLmSXX/view?usp=drive_link',
     ),
     MagazineData(
-      year: 2023,
+      year: 2024,
       driveLink:
-          'https://drive.google.com/file/d/14mnQqGuPa0hvi9m7xzME9yyhpJCunRci/view?usp=sharing',
+          'https://drive.google.com/file/d/1MoOCi0YC-0K4k1zf1-CvUiNIgoAlYFWh/view?usp=drive_link',
     ),
     MagazineData(
       year: 2022,
       driveLink:
-          'https://drive.google.com/file/d/14mnQqGuPa0hvi9m7xzME9yyhpJCunRci/view?usp=sharing',
+          'https://drive.google.com/file/d/14mnQqGuPa0hvi9m7xzME9yyhpJCunRci/view?usp=drive_link',
     ),
   ];
 

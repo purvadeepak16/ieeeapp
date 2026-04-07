@@ -83,14 +83,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   Image.asset(
                     'assets/images/logos/ieee_main_logo.png',
                     height: 34,
+                    color: theme.brightness == Brightness.dark
+                        ? Colors.white
+                        : null,
                   ),
                   const SizedBox(width: 8),
-                  const Text(
+                  Text(
                     'IEEE-VESIT',
                     style: TextStyle(
                       fontSize: 22,
                       fontWeight: FontWeight.w700,
-                      color: Color(0xFF0A2A66),
+                      color: theme.brightness == Brightness.dark
+                          ? Colors.white
+                          : const Color(0xFF0A2A66),
                     ),
                   ),
                 ],
@@ -171,23 +176,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               _registerButton(context, authState.isLoading),
 
               const SizedBox(height: 28),
-
-              Text(
-                '— Or Register with Google —',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-
-              const SizedBox(height: 22),
-
-              Center(
-                child: _socialIcon(context, 'google_logo.png'),
-              ),
-
-              const SizedBox(height: 30),
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,

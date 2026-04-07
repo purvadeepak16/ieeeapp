@@ -15,6 +15,7 @@ final _demoEvents = [
     venue: 'B51, VESIT',
     type: EventType.social,
     imageUrl: 'assets/events/symposium.jpg',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['symposium', 'networking', 'community'],
   ),
   IEEEEvent(
@@ -27,6 +28,7 @@ final _demoEvents = [
     venue: 'B51, VESIT',
     type: EventType.workshop,
     imageUrl: 'assets/events/ML.jpeg',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['machinelearning', 'ai', 'datascience'],
   ),
   IEEEEvent(
@@ -39,6 +41,7 @@ final _demoEvents = [
     venue: 'B51, VESIT',
     type: EventType.workshop,
     imageUrl: 'assets/events/ML.jpeg',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['machinelearning', 'ai', 'datascience'],
   ),
   IEEEEvent(
@@ -51,6 +54,7 @@ final _demoEvents = [
     venue: 'B51, B52, VESIT',
     type: EventType.competition,
     imageUrl: 'assets/events/CTF.jpeg',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['cybersecurity', 'ctf', 'competition'],
   ),
   IEEEEvent(
@@ -63,6 +67,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     imageUrl: 'assets/events/CTF.jpeg',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['cybersecurity', 'ctf', 'workshop'],
   ),
   IEEEEvent(
@@ -75,6 +80,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     imageUrl: 'assets/events/CTF.jpeg',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['cybersecurity', 'ctf', 'workshop'],
   ),
   IEEEEvent(
@@ -87,6 +93,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.competition,
     imageUrl: 'assets/events/Arcane.jpeg',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['hackathon', 'innovation', 'coding'],
   ),
   IEEEEvent(
@@ -99,6 +106,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.competition,
     imageUrl: 'assets/events/Arcane.jpeg',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['hackathon', 'innovation', 'coding'],
   ),
   IEEEEvent(
@@ -111,6 +119,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     imageUrl: 'assets/events/Apicalypse.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['api', 'backend', 'integration'],
   ),
   IEEEEvent(
@@ -123,6 +132,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     imageUrl: 'assets/events/Apicalypse.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['api', 'backend', 'integration'],
   ),
   IEEEEvent(
@@ -135,6 +145,7 @@ final _demoEvents = [
     venue: 'B21, VESIT',
     type: EventType.workshop,
     imageUrl: 'assets/events/tpp_25.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['presentation', 'research', 'technical'],
   ),
   IEEEEvent(
@@ -147,6 +158,7 @@ final _demoEvents = [
     venue: 'B41, VESIT',
     type: EventType.workshop,
     imageUrl: 'assets/events/tpp_25.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['presentation', 'research', 'technical'],
   ),
   IEEEEvent(
@@ -159,6 +171,7 @@ final _demoEvents = [
     venue: 'B21, VESIT',
     type: EventType.workshop,
     imageUrl: 'assets/events/uiux25.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['design', 'uiux', 'creativity'],
   ),
   IEEEEvent(
@@ -171,6 +184,7 @@ final _demoEvents = [
     venue: 'B21, VESIT',
     type: EventType.workshop,
     imageUrl: 'assets/events/uiux25.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['design', 'uiux', 'creativity'],
   ),
   IEEEEvent(
@@ -181,9 +195,10 @@ final _demoEvents = [
     startTime: const TimeOfDay(hour: 14, minute: 30),
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'Online',
-    type: EventType.competition,
+    type: EventType.workshop,
     isFeatured: true,
     imageUrl: 'assets/events/pcb.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['pcb', 'electronics', 'hardware'],
   ),
   IEEEEvent(
@@ -194,9 +209,10 @@ final _demoEvents = [
     startTime: const TimeOfDay(hour: 14, minute: 30),
     endTime: const TimeOfDay(hour: 16, minute: 30),
     venue: 'Online',
-    type: EventType.competition,
+    type: EventType.workshop,
     isFeatured: true,
     imageUrl: 'assets/events/pcb.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['pcb', 'electronics', 'hardware'],
   ),
   IEEEEvent(
@@ -209,6 +225,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     imageUrl: 'assets/events/mongo.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['mongodb', 'database', 'nosql'],
   ),
   IEEEEvent(
@@ -221,6 +238,7 @@ final _demoEvents = [
     venue: 'Online',
     type: EventType.workshop,
     imageUrl: 'assets/events/mongo.png',
+    resourceLink: 'https://drive.google.com/drive/folders/1BUHnhWVkSJQUtSgS5q_488RdhXLiLKhx?usp=sharing',
     tags: ['mongodb', 'database', 'nosql'],
   ),
 

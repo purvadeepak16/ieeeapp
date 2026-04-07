@@ -102,11 +102,11 @@ class AppDrawer extends ConsumerWidget {
                   _buildDrawerItem(
                     context,
                     icon: Icons.travel_explore_rounded,
-                    label: 'IEEE Xplore',
+                    label: 'IEEE XPLORE DIGITAL LIBRARY',
                     highlightColor: const Color(0xFF00629B),
                     onTap: () async {
                       Navigator.pop(context);
-                      final url = Uri.parse('https://ieeexplore.ieee.org/Xplore/home.jsp');
+                      final url = Uri.parse('https://www.ieeevesit.org/myloft');
                       if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
                         debugPrint('Could not launch $url');
                       }

@@ -214,23 +214,6 @@ class MicroSkillsWidget extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 16),
-          Container(
-            height: 8,
-            decoration: BoxDecoration(
-              color: colorScheme.onSurface.withAlpha(30),
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: colorScheme.onSurface, width: 1),
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: const LinearProgressIndicator(
-                value: 0.3,
-                backgroundColor: Colors.transparent,
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.blue),
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [

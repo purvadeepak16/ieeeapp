@@ -93,14 +93,21 @@ class _EditProfilePageState extends ConsumerState<EditProfilePage> {
       final user = ref.read(authRepositoryProvider).currentUser;
       if (user == null) throw Exception('User not authenticated');
 
+      // Update Firebase Auth user's displayName
+      await user.updateDisplayName(_fullNameController.text.trim());
+      
+      // Update Firestore document
       await FirebaseFirestore.instance
           .collection('users')
           .doc(user.uid)
           .update({
-        'displayName': _fullNameController.text,
+        'displayName': _fullNameController.text.trim(),
         'phoneNumber': _phoneController.text,
         'updatedAt': FieldValue.serverTimestamp(),
       });
+
+      // Reload user to get updated data
+      await user.reload();
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

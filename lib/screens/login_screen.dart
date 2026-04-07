@@ -162,23 +162,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
               const SizedBox(height: 30),
 
-              Text(
-                '— Or Login with Google —',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-                ),
-              ),
-
-              const SizedBox(height: 22),
-
-              Center(
-                child: _socialIcon(context, 'google_logo.png'),
-              ),
-
-              const SizedBox(height: 30),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

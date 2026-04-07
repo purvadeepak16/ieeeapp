@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ieee_app/widgets/wie_widgets/global_wie_info.dart';
 import 'package:ieee_app/widgets/wie_widgets/hero_strip.dart';
-import 'package:ieee_app/widgets/wie_widgets/inspiring_carousel.dart';
 import 'package:ieee_app/widgets/wie_widgets/team_section.dart';
 
 class WieBody extends StatelessWidget {
@@ -17,10 +16,6 @@ class WieBody extends StatelessWidget {
           Padding(
               padding: EdgeInsets.all(16),
               child: GlobalWieInfo()),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: InspiringCarousel(),
-          ),
           SizedBox(height: 16),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
